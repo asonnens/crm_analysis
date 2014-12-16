@@ -13,8 +13,9 @@ from collections import defaultdict
 ###############################################################################
 
 
-bedfiles = glob.glob("/mnt/home/sonnens2/crm_analysis/input_files/*.bedgraph")
-wigfiles = glob.glob("/mnt/home/sonnens2/crm_analysis/other_files/phastcons/*.pp")
+bedfiles = glob.glob("/mnt/home/sonnens2/crm_analysis/input_data/input_files/*.bedgraph")
+phast_files = glob.glob("/mnt/home/sonnens2/crm_analysis/other_files/phastcons/*.pp")
+histone_files = glob.glob("/mnt/home/sonnens2/crm_analysis/other_files/Furlong_bits/*.wig")
 
 
 class TF(object):
@@ -37,6 +38,18 @@ class TF(object):
         self.feature_type = self.dataset + "," + self.protein + "," + self.method
 
 
+class Reporter(object):
+    """This class includes attributes of reporters with no assigned genes"""
+    ###########################################################################
+    #Reporter attributes:  coordinates (list), expression(list of lists), dataset(string) 
+    #experiement in which identified
+    ###########################################################################
+    def __init__(self, coords, expression, dataset):
+        self.coords = coords
+        self.dataset = dataset
+        self.expression = expression
+
+
 
 class Enhancer(object):
     """This class includes attributes and functions of putative enhancers"""
@@ -56,9 +69,13 @@ class Enhancer(object):
         self.coord1 = int(chromosome_region[1])
         self.coord2 = int(chromosome_region[2])
         self.TF_dict = {}
+        self.phast_cons = 0
+        self.H3 = 0
+        self.chromatin = {}
+        self.feature_list = []
         self.score = 5
         self.name = gene + "_" + self.chr + "_" + str(self.coord1) + "_" + str(self.coord2)
-        self.feature_list = []
+
     ###########################################################################
     #Functions for reading files into enhancer, and printing enhancer info
     ########################################################################### 
@@ -80,19 +97,29 @@ class Enhancer(object):
             filetype = "bedgraph"
         elif "fixedStep" in first_line:
             filetype = "wig"
+        elif "type=wiggle" in first_line:
+            filetype = "wig"
+            first_line = infile.readline()
+        elif "##gff" in first_line:
+            filetype = "gff"
         else:
             filetype = "unknown file type"
         return filetype, first_line
+     
+     ###########################################################################
+     #Functions for bedfiles
+     ########################################################################### 
 
     def filter_bedfile(self, chr, TF_to_check, dataset, method, protein):
         #########################################################
+        #adds TFs to the enhancer based on overlap
         #first function for reading bedfiles
         #checks determines if bedfile line falls within enhancer
         #checks chromosome, if chromosome matches, checks for overlap
         #########################################################
-        bed_line = TF_to_check.split("\t")
+        bed_line = TF_to_check.split("\t") 
         if "chr" not in chr:
-            chrline = "chr" + str(chr)
+            chrline = "chr" + str(chr) #making sure nomenclature is consistent
         else:
             chrline = chr
         if bed_line[0] == chrline:
@@ -110,7 +137,8 @@ class Enhancer(object):
     def read_bedgraph(self, infile):
         #########################################################
         #second function for reading bedgraphs
-        #reads bedgraph filetype, filtering with filter_bedfile
+        #processes header info, and checks filetype, before sending
+        #to filter_bedfile function
         #########################################################
         for line in infile:
             if "browser" in line:
@@ -128,6 +156,10 @@ class Enhancer(object):
             else:
                 self.filter_bedfile(self.chr, line, dataset, method, protein)
 
+     ###########################################################################
+     #Functions for wigfiles
+     ########################################################################### 
+
     def get_wigfile_info(self, wig_info_line):
         #########################################################
         #first function for reading wigfiles
@@ -143,13 +175,15 @@ class Enhancer(object):
         wig_step = int(step_info.split("=")[1])
         return wig_chr, wig_start, wig_step
 
-    def read_wigfile(self, infile, first_line):
+    def read_wigfile(self, infile, first_line, filename):
         #########################################################
-        #seconf function for reading wigfiles
+        #second function for reading wigfiles
         #if header line, gets header info with 
         #get_wigfile_info function
         #########################################################
         file_chr, start, step, = self.get_wigfile_info(first_line)
+        filename_extension = filename.split(".")[-1]
+        filename_ID = filename.split(".")[0] 
         current_coord = start
         wig_info = []
         wig_sum = 0
@@ -165,11 +199,21 @@ class Enhancer(object):
                     wig_sum = wig_sum + float(current_val)
                     line_info =  str(self.chr) + "\t" + str(current_coord-step) + "\t" + \
                                  str(current_coord) + "\t" + str(current_val) + "\n"   
-                    wig_info.append(line_info)        
+                    #wig_info.append(line_info)        
                 else:
                     pass
         wig_average = wig_sum/(self.coord2 - self.coord1)
-        return wig_average, wig_info
+        if filename_extension == "pp":
+            self.phast_cons = wig_average
+        elif filename_extension == "wig":
+            if "H3-subtracted" in filename_ID:
+                filename_ID = filename_ID.strip("_H3-subtracted")
+                self.chromatin[filename_ID] = wig_average 
+            else:
+                if "H3" in filename_ID:   
+                    self.H3 = wig_average      
+        else:
+            print "unknown file type? ", filename
 
     def read_file(self, filename):
         #########################################################
@@ -179,15 +223,17 @@ class Enhancer(object):
         #########################################################
         infile = open(filename)
         filetype, first_line = self.check_file_type(infile)
+        filename_ID = filename.split("/")[-1]
+        #print "reading ", filename_ID + " for " + self.status + " enhancer of " + self.gene
         dataset = ""
         method = ""
         protein = ""
         if filetype == "bedgraph":
             self.read_bedgraph(infile)
-        if filetype == "wig":
+        if filetype == "wig" or "wig2":
             if self.chr in infile.read():
                 infile.seek(0)
-                self.read_wigfile(infile, first_line)
+                self.read_wigfile(infile, first_line, filename_ID)
         infile.close()
 
     def print_TFs(self):
@@ -198,6 +244,8 @@ class Enhancer(object):
         for keys in self.TF_dict:
             print self.TF_dict[keys].dataset, self.TF_dict[keys].protein, self.TF_dict[keys].chr, \
                   self.TF_dict[keys].coord1, self.TF_dict[keys].coord2, self.TF_dict[keys].score
+     #   for filename, score in self.other_features_dict:
+     #       print filename, score
 
     def print_enhancer_bedfile(self, outfile):
         #########################################################
@@ -207,8 +255,11 @@ class Enhancer(object):
                   str(self.coord2) + "\t" +  str(self.score) + "\r\n"
         outfile.write(my_line)
 
+
+
 class Enhancer_compare(object):
-    """this class takes in a set of enhancers, and provides average values and variance for all numerical features"""
+    """this class takes in a set of enhancers, and provides \
+       average values and variance for all numerical features"""
     ###########################################################################
     #This creates the object of an enhancer comparison-- basically a list of 
     #enhancers, and some summary statistics of their characteristcs
@@ -219,8 +270,9 @@ class Enhancer_compare(object):
     def __init__(self, enhancer_list, list_name, input_info = bedfiles):
         #########################################################
         #attributes of Enhancer_compare object include:
-        # enhancer list, and unincorporated feature files
+        #enhancer list, and unincorporated feature files
         #########################################################
+        print "comparing enhancers ", list_name
         self.list_name = list_name
         self.enhancer_list = enhancer_list
         self.input_info = input_info
@@ -282,7 +334,7 @@ class Enhancer_compare(object):
 
     def average_enhancer_feature(self):
         #########################################################
-        #
+        #gets mean value of each feature for a list of enhancers
         #########################################################
         feature_list = self.list_of_features()
         average_feature_dict = {}
@@ -320,24 +372,39 @@ class Enhancer_compare(object):
 
     def print_enhancer_data(self):
         #########################################################
-        #
+        #for each enhancer in comparison list, prints sum of
+        #feature scores, and counts
         #########################################################
-        outfilename = "/mnt/home/sonnens2/crm_analysis/output_files/" + \
+        outfilename = "/mnt/home/sonnens2/crm_analysis/output_data/" + \
                        self.list_name + "_" + "summary_info.csv"
         outfile = open(outfilename, "w")
-        outfile.write("name,gene,expr,status,distance_from_TSS,")
-        feature_list = self.list_of_features()
-        header_info = ""
-        for i in feature_list:
-            i_list = i.split(",")
-            ioutput = "_".join(i_list)
-            header_info = header_info + ioutput + "_score," + ioutput + "_count" + ","
+        outfile.write("name,gene,expr,status,distance_from_TSS,phastcons,H3,")
+        key_list= []
+        feature_list = []
+        feature_list_output = []
+        header_info = "" 
+        for enhancer_items in self.enhancer_list:
+            for i in enhancer_items.feature_list:
+                if i not in feature_list:
+                    feature_list.append(i)
+                    ilist = i.split(",")
+                    ioutput = "_".join(ilist)
+                    feature_list_output.append(ioutput)
+            for keys in enhancer_items.chromatin:
+                print keys
+                if keys not in key_list:
+                    key_list.append(keys)
+        for tf_keys in sorted(feature_list_output):
+            header_info = header_info + tf_keys + "_score,"
+        for chromatin_keys in sorted(key_list):
+            header_info = header_info + chromatin_keys + "_score,"       
         header_info = header_info[0:-1] + "\r\n"
         outfile.write(header_info)
         for i in self.enhancer_list:
             out_string = (str(i.name) + "," + str(i.gene) + "," + str(i.expr) + "," +   \
-                          str(i.status) + "," +  str(i.distance) + "," )
-            for j in feature_list:
+                          str(i.status) + "," +  str(i.distance) + "," + 
+                          str(i.phast_cons) + "," + str(i.H3) + ",")           
+            for j in sorted(feature_list):
                 feature_count = 0
                 feature_scores = [0]
                 for tfs in i.TF_dict:
@@ -345,8 +412,13 @@ class Enhancer_compare(object):
                     if j == feature_type:
                         feature_count = feature_count + 1
                         feature_scores.append(float(i.TF_dict[tfs].score))
-                average_score = numpy.average(feature_scores)
-                out_string = out_string + (str(average_score) + "," + str(feature_count) + ",")
+                sum_score = numpy.sum(feature_scores)
+                out_string = out_string + (str(sum_score) + "," )
+            for keys in key_list:
+                if keys in i.chromatin.keys():
+                    out_string = out_string + str(i.chromatin[keys]) + ","
+                else:
+                    out_string = out_string + str(0) + ","
             out_string = out_string[0:-1]  + "\r\n" 
             outfile.write(out_string)
         outfile.close()
@@ -354,7 +426,7 @@ class Enhancer_compare(object):
 class Enhancer_find:
     ###########################################################################
     #checks feature files for putative enhancers associated with a specific 
-    #gene, and validates features include list of TFs involved in putative 
+    #gene, and validates features. includes list of TFs involved in putative 
     #enhancer, list of feature files, coordinates, 
     #and the gene for which enhancers are being found
     ###########################################################################
@@ -365,6 +437,7 @@ class Enhancer_find:
         #features include: list of proteins that may contribute to this enhancer, 
         #gene enhancer would be associated with, and target coords
         #########################################################
+        print "finding enhancers of ", gene
         self.protein_list = protein_list
         self.input_info = input_info
         self.coords = coords
@@ -374,13 +447,21 @@ class Enhancer_find:
         self.coord2 = int(coord_info[2])
         self.gene = gene
         self.TSS = TSS
+        self.phast_cons = 0
         self.expr = expr
         self.status = status
 
     def cluster_TF(self, seed_TF, test_line):
-        """this function...?"""
+        """uses seed protein and other transcription factors to identify clusters"""
         #########################################################
-        #
+        #this function adds bedformat transcription factor features
+        #if there is any overlap with the seed protein (in this case
+        #dorsal), it's added to the list of prospective enhancers
+        #The coordinates overlapping features for a putative
+        #are averaged, weighting in favor of chip-seq over chip-chip
+        #data 3:1 to get the midpoint, and 750 up and down from the 
+        #midpoint are defined as the enhancer.         
+        #the putative enhancer coords are returned
         #########################################################
         my_feature_list = []
         return_variable = 0
@@ -442,9 +523,11 @@ class Enhancer_find:
         return return_variable 
 
     def get_TF(self, line, protein, method, dataset):
-        """this function checks """
         #########################################################
-        #
+        #the coordinates of putative enhancers identified in the 
+        #clustering function are compared with the total list of
+        #transcription factors.  TFs from the bedfile are added
+        #to the putative enhancers 
         #########################################################
         putative_enhancer_list = []
         my_line = line.split("\t")
@@ -464,12 +547,12 @@ class Enhancer_find:
         return(putative_enhancer_list)
 
     def print_bedfile(self, mylist):
-        """this function checks """
         #########################################################
-        #
+        #print a list of enhancers in bedgraph format
         #########################################################
         file_info = self.gene + "_" + self.status + "_enhancers"
-        outfile_name = "/mnt/home/sonnens2/crm_analysis/output_files/" + self.gene + "_putative_enhancers.bedgraph"    
+        outfile_name = "/mnt/home/sonnens2/crm_analysis/output_data/" + \
+                       self.gene + "_putative_enhancers.bedgraph"    
         outfile = open(outfile_name, "w")
         outfile.write("browser hide all\r\n")
         outfile.write("browser pack refGene encodeRegions\r\n")
@@ -484,7 +567,6 @@ class Enhancer_find:
         outfile.close()
 
     def merge_enhancers(self, enhancer_list):
-        """this function checks """
         #########################################################
         #
         #########################################################
@@ -507,11 +589,11 @@ class Enhancer_find:
         return merged_enhancer
 
     def merge_enhancer_list(self, enhancer_list):
-        """this function checks """
         #########################################################
         #this is the worst function ever
         #########################################################
         enhancer_list.sort(key=lambda x: x.coord1, reverse=False)
+        print "merging overlapping enhancers"
         small_list = []
         merged_list = []
         for i in enhancer_list[0:-1]:
@@ -539,14 +621,15 @@ class Enhancer_find:
                     else:
                         merged_list.append(small_list[0])
                     small_list = []
+        print "merged"
         return merged_list
 
     def find_TF(self, choose_protein = "Dorsal"):
-        """insert docstring"""
         #########################################################
         #
         #########################################################
         putative_enhancer_list = []
+        print "finding TFs"
         for each_file in self.input_info:
             infile = open(each_file)
             dataset = ""
@@ -575,15 +658,17 @@ class Enhancer_find:
             self.print_bedfile(merged_enhancer_list)
 
     def score_enhancers(self, enhancer_list):
-        """insert docstring"""
         #########################################################
         #
         #########################################################
         list_name = self.gene  + "_" + self.status + "_enhancers"
+        print "getting info for ", list_name
         for i in enhancer_list:
-            print self.gene
             for bedgraph in bedfiles:
                 i.read_file(bedgraph)
-            i.print_TFs()
+            #for wigfile in phast_files:
+            #    i.read_file(wigfile)
+            for wigfile in histone_files:
+                i.read_file(wigfile)
         my_compare = Enhancer_compare(enhancer_list, list_name)
         Enhancer_compare.print_enhancer_data(my_compare)

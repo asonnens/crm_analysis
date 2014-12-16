@@ -1,4 +1,4 @@
-mydata <- read.csv("putative_enhancers.csv", header = TRUE)
+mydata <- read.csv("temp_data.csv", header = TRUE)
 fix(mydata)
 
 #function from little book of r for multivariate analysis
@@ -127,7 +127,7 @@ calcWithinGroupsVariance <- function(variable,groupvariable)
 library(corrgram)
 corrgram(mydata[6:13], order=TRUE, lower.panel=panel.shade, upper.panel=panel.conf, diag.panel = NULL, label.pos = 0.5, font.labels = 3, cex.labels = 1, col.regions = colorRampPalette(c("green", "lightgreen", "orange", "darkred")), main = "Correlations between Datasets")
 
-standardisedconcentrations <- as.data.frame(scale(mydata[5:13]))
+standardisedconcentrations <- as.data.frame(scale(mydata[5:14]))
 mydata.pca <- prcomp(standardisedconcentrations) 
 summary(mydata.pca)
 screeplot(mydata.pca, type="lines")
@@ -167,7 +167,7 @@ calcpc <- function(variables,loadings)
   
   library("MASS") 
 
-knowndata <- subset(mydata, mydata$status!="putative")
+knowndata <- subset(mydata, temp_data$status!="putative")
 
 standardisedconcentrations <- as.data.frame(scale(knowndata[5:13]))
 knowndata.pca <- prcomp(standardisedconcentrations)
@@ -214,9 +214,23 @@ knowndata.lda$scaling[,1]
      return(ld)
   }
   
+tab1 <- table(knowndata$status)
+tab1
+
+enhancers_strata <- strata(knowndata, stratanames = c("status"), method = "srswor", size = c(round(tab1[1] * 
+    (1/2)), round(tab1[2] * (1/2))))
+
+enhancers_strata <- strata(knowndata, stratanames = c("status"), method = "srswor", size = 5  , 5))
+
+names(enhancers_strata)
+
  knowndata.lda.values$x[,1] 
  calclda(knowndata[5:13], knowndata.lda$scaling[,1])
  knowndata.lda.values <- predict(knowndata.lda, knowndata[5:13])
+
+lda_training_table <- table(actual = known_data$confirmed, predicted = predict(knowndata.lda, 
+    newdata = wings_training)$class)
+lda_training_table
  
  
  
@@ -244,7 +258,7 @@ knowndata.lda$scaling[,1]
      return(variables_new)
   }
   
-  #groupstandardisedconcentrations <- groupStandardise(knowndata[5:13], knowndata$status)
+  groupstandardisedconcentrations <- groupStandardise(knowndata[5:14], knowndata$status)
   
   #knowndata.lda2 <- lda(knowndata$status ~ groupstandardisedconcentrations$distance_from_TSS + groupstandardisedconcentrations$Eisen_120min_Zelda_chip.seq  +
   #                           groupstandardisedconcentrations$Furlong_Snail_chip.seq + groupstandardisedconcentrations$Furlong_Twist_chip.seq  +
@@ -256,3 +270,7 @@ knowndata.lda$scaling[,1]
 
 plot(knowndata.lda.values$x[,1], pch = 16, col = c("black", "red")[knowndata$status], ylab = "lda 1", main = "Linear discriminate analysis of functional vs. non-functional enhancers", cex.main = 0.85)
  
+
+
+
+
