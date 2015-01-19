@@ -30,12 +30,19 @@ def read_Stark(filename, dataset_name):
         expression_info = myreporter[4]
         expression_list = expression_info.split("|")
         expression = []
+        count = 0
         for i in expression_list:
             if i == "NA":
                 expression = expression + [["NA",0]]
             else:
-                expr = i.split(";")
-                expression = expression + [[expr[0],expr[1]]]
+                expr = expression_list[count].split(";")
+                if int(expr[1]) >= 3:
+		    print expr
+                    expression = [[expr[0],expr[1]]]
+            count = count + 1
+            #else:
+            #    expr = i.split(";")
+            #    expression = expression + [[expr[0],expr[1]]]
         my_reporter = Reporter(coords, expression, "Stark")
         coords_string = "\t".join(coords)
         each_reporter = enhancer_classes.Enhancer("Kvon2014", coords_string, "NA", expression, "reporter")
@@ -61,22 +68,22 @@ for i in my_reporters:
             for bedgraph in enhancer_classes.bedfiles:
                 i.read_file(bedgraph)
             NA_list.append(i)
-        elif len(i.expr) >= 2:
-            big_list = []
-            for j in i.expr:
-                if int(j[1]) > 3:
-                    big_list.append(j)
-            if len(big_list) == 1:
-                i.expr = big_list
-                for bedgraph in enhancer_classes.bedfiles:
-                    i.read_file(bedgraph)
-                multi_list.append(i)
+  #      elif len(i.expr) >= 2:
+  #          big_list = []
+  #          for j in i.expr:
+  #              if int(j[1]) > 3:
+  #                  big_list.append(j)
+  #          if len(big_list) == 1:
+  #              i.expr = big_list
+  #              for bedgraph in enhancer_classes.bedfiles:
+  #                  i.read_file(bedgraph)
+  #              multi_list.append(i)
         else:
             pass
 
 
 #stark_all_comparison = enhancer_classes.Enhancer_compare(all_list, "Stark_reporters_all")
-stark_one_reporter_comparison = enhancer_classes.Enhancer_compare(one_list, "Stark_reporters_one")
+stark_one_reporter_comparison = enhancer_classes.Enhancer_compare(one_list, "Stark_reporters_one2")
 #stark_NA_reporter_comparison = enhancer_classes.Enhancer_compare(NA_list, "Stark_reporters_NA")
 #stark_multi_reporter_comparison = enhancer_classes.Enhancer_compare(multi_list, "Stark_reporters_multi")
 enhancer_classes.Enhancer_compare.print_enhancer_data(stark_one_reporter_comparison)

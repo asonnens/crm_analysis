@@ -97,8 +97,8 @@ def genes_to_check(infilename):
         enhancer_classes.Enhancer_find.find_TF(putative_enhancers, "Dorsal")
 
       
-known_enhancer_comparison = known_enhancers("/mnt/home/sonnens2/crm_analysis/input_data/input_files/known_enhancers.csv")
-enhancer_classes.Enhancer_compare.print_enhancer_data(known_enhancer_comparison)
+#known_enhancer_comparison = known_enhancers("/mnt/home/sonnens2/crm_analysis/input_data/input_files/known_enhancers.csv")
+#enhancer_classes.Enhancer_compare.print_enhancer_data(known_enhancer_comparison)
 
 #finding potential enhancers for genes that are definitely involved in the developmental pathway
 #genes_to_check("/mnt/home/sonnens2/crm_analysis/input_data/input_files/negative_enhancers.csv")
