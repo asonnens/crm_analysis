@@ -1,0 +1,27 @@
+#clustering CRMS pseudocode
+
+Goals: go through peak csv files, find clusters of TFs (presumably sort out if it makes biological sense afterward?)
+	-what is a cluster
+		-call any single TF a cluster of one
+		-any TFs within 1kb of each other a cluster
+		
+	-make a class peak (put this in a module!)
+		-variables 
+			-TF name, peak coord min and max, peak strength, other info
+		-methods
+			-create peak
+			-get coords of peak
+			
+	-make a class cluster
+		-variables
+			-range (-0.5kb-+0.5kb the furthest spread apart cluster members), contents class peak
+		-methods
+			-create cluster
+			-get range
+			-add to cluster
+			-print cluster
+		
+
+make a dictionary of clusters (there will be as many clusters as their are peaks, because cluster size min is 1 TF)
+
+	
