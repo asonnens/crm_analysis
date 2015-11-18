@@ -1,7 +1,7 @@
 browser hide all
 browser pack refGene encodeRegions
 browser full altGraph
-track type=bedGraph name="gt mel Eisen2013" description="BedGraph format" visibility=full color=200,100,0 altColor=0,100,200 priority=20
+track type=bedGraph name="Eisen2013 chip-seq giant" description="BedGraph format" visibility=full color=200,100,0 altColor=0,100,200 priority=20
 chr3R	540	1358	0.734
 chr3R	1792	2468	-1.146
 chr3R	5910	6560	0.114

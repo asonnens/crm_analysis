@@ -1,7 +1,7 @@
 browser hide all
 browser pack refGene encodeRegions
 browser full altGraph
-track type=bedGraph name="KNI mel Eisen2010" description="BedGraph format" visibility=full color=200,100,0 altColor=0,100,200 priority=20
+track type=bedGraph name="Eisen2010mel chip-seq knirps" description="BedGraph format" visibility=full color=200,100,0 altColor=0,100,200 priority=20
 chr2L	27696	29413	3.77
 chr2L	90774	92301	4.18
 chr2L	221260	224811	4.09
@@ -507,4 +507,3 @@ chrX	20550801	20552261	5.42
 chrX	20555407	20557434	11.04
 chrX	20564488	20566139	5.32
 chrX	20595015	20596687	6.54
-

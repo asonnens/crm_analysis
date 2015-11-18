@@ -1,7 +1,7 @@
 browser hide all
 browser pack refGene encodeRegions
 browser full altGraph
-track type=bedGraph name="MacArthur chip-chip hunchback" description="BedGraph format" visibility=full color=250,150,0 altColor=0,150,250 priority=20
+track type=bedGraph name="MacArthur chip-chip hb" description="BedGraph format" visibility=full color=250,150,0 altColor=0,150,250 priority=20
 chr4	651926	653448	1.8010902405
 chr4	844558	846598	1.4776439667
 chr4	1001373	1002741	1.4618139267

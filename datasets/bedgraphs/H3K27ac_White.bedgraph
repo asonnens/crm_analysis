@@ -1,8 +1,8 @@
 browser hide all
 browser pack refGene encodeRegions
 browser full altGraph
-track type=bedGraph name="White chip-seq H3K27ac" description="BedGraph format" visibility=full color=250,150,0 altColor=0,150,250 priority=21
-2L	30056	38532	1
+track type=bedGraph name="White chip-seq H3K27acW" description="BedGraph format" visibility=full color=250,150,0 altColor=0,150,250 priority=21
+chr2L	30056	38532	1
 chr2L	42999	44519	1
 chr2L	66007	68863	1
 chr2L	78398	80190	1

@@ -1,7 +1,7 @@
 browser hide all
 browser pack refGene encodeRegions
 browser full altGraph
-track type=bedGraph name="Zeitlinger1 chip-seq Twist" description="BedGraph format" visibility=full color=200,100,0 altColor=0,100,200 priority=20
+track type=bedGraph name="Zeitlinger1 chip-seq twist" description="BedGraph format" visibility=full color=200,100,0 altColor=0,100,200 priority=20
 chr2L	27110	27263	186.943
 chr2L	66689	67060	104.547
 chr2L	86468	86643	30.9494

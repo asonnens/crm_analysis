@@ -1,7 +1,7 @@
 browser hide all
 browser pack refGene encodeRegions
 browser full altGraph
-track type=bedGraph name="Rushlow chip-seq dl" description="BedGraph format" visibility=full color=300,400,0 altColor=0,400,300 priority=20
+track type=bedGraph name="Rushlow chip-seq DorsalR" description="BedGraph format" visibility=full color=300,400,0 altColor=0,400,300 priority=20
 chr2L	4980	6230	105.025000
 chr2L	18490	19400	77.380000
 chr2L	157440	159960	171.575000

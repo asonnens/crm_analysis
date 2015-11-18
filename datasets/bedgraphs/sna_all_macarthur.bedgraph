@@ -1,7 +1,7 @@
 browser hide all
 browser pack refGene encodeRegions
 browser full altGraph
-track type=bedGraph name="MacArthur chip-chip Snail" description="BedGraph format" visibility=full color=300,400,0 altColor=0,400,300 priority=20
+track type=bedGraph name="MacArthur chip-chip sna" description="BedGraph format" visibility=full color=300,400,0 altColor=0,400,300 priority=20
 chrX	485630	488279	3.072174802
 chrX	7213657	7216093	2.962787247
 chrX	11737245	11740105	2.703128406
