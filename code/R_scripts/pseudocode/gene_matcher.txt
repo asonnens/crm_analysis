@@ -1,9 +1,0 @@
-#sorting GFF files pseudocode
-
-goals:
--find alleles within CRM regions
--find 5 nearest genes to CRM region
--find any P-elements within 1kb of CRM region
--use RNApolII binding for nearest *transcribed* gene?
-
--use class peak (see clustering pseudocode)
