@@ -86,6 +86,19 @@ express <- rename(express, c("Zelda180" = "Zelda_seq", "Rushlow_Dorsal" = "Dorsa
 FSna_train_cons <- FSna_train_cons
 FSna_all <- FSna_train_all
 current_put <- FSna_put500
+current_all <- read.table("Annotated_enhancers.tsv", header = TRUE)
+
+plot(current_all$Rushlow_Dorsal ~ current_all$Eisen2013_Bicoid, col = current_all$color, pch = 20, ylab = "Dorsal", xlab = "Bicoid")
+
+text(current_all$Rushlow_Dorsal ~ current_all$Eisen2013_Bicoid, labels = current_all$gene, pos = 4, col = current_all$color, cex = 0.8)
+
+library(ggplot2)
+library(GGally)
+ggpairs(with(current_all, data.frame(Rushlow_Dorsal, Furlong_Twist, Eisen2013_Bicoid, MacArthur_Hairy)))
+
+putPlot(p, ggplot(current_all, aes(x=Dorsal, colour=color)) + stat_ecdf(), 1,1)
+
+with(current_all, text(current_all$Rushlow_Dorsal ~ current_all$Eisen2013_Bicoid, labels = row.names(current_all$gene), pos = 4))
 
 
 

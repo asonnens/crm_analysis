@@ -18,14 +18,26 @@
 
 -We found...
 
+##Methods
+
+### 1
+
+### 2
+
+### 3
+
 
 ## Results  
 
 ### 1 Analysis of features used as predictors
--Reasons for including these particular datasets
--Dataset provenance
--Brief discussion of how features do and don't overlap
--how features overlap with known, well annotated enhancers
+A number of features correlate with enhancer sequences in *Drosophila*, and with their resulting expression patterns. These include transcription factor occupancy [refs], specific histone marks[refs], DNase1 hypersensitivity [refs], evolutionary conservation [refs], and motif enrichment [refs]. Computational strategies that incorporate a combination of these features have been found to be the most successful[refs]. 
+
+The transcription factors Dorsal, Snail and Twist are all known to co-regulate dorsal-ventral patterning in early embryonic development; clustered occupancy of these proteins has been successfully used to identify DV-enhancers [refs]. However, they have also been found to bind enhancers that regulate genes more typically associated with anterior-posterior development, such as gap genes *orthodenticle*, and *knirps*, and pair rule genes *runt* and *hairy* [refs]. For this reason, we also chose to use as predictors transcription factors specifically associated with anterior-posterior regulatory networks, including Bicoid, Caudal, Hairy, Knirps, Kruppel, and Giant [refs]. We also included the 'pioneer' transcription factor Zelda [refs], H3K27ac [refs] and H3K4me1 [refs] histone marks, and the histone acetyltransferase Nejire (also known as p300) [refs].
+
+There are a large number of chromatin immunoprecipitation studies that have made their data publicly available. Notably, in 2009 the Berkeley *Drosophila* Transcription Project released data from ChIP-chip on twenty-one transcription factors involved in early embryonic development. Since then, several studies from the same lab [refs] and others [refs] have released overlapping datasets, frequently obtained from higher resolution[refs] techniques like ChIP-seq[refs]. The regions identified as bound by a given transcription factor using different techniques typically do not completely overlap (figure, refs). Even regions identified using the same technique by different labs, or using different antibodies even within a given experiment frequently produce variable results (figure, results). For this reason, we chose to include multiple datasets for some features. Our final list included twenty-three predictors, encompassing fourteen unique features (table1).
+
+Interestingly, in addition to Dorsal, Snail and Twist binding to enhancers for AP development genes, transcription factors typically associated with AP development also appear to bind to enhancers for DV genes. It is possible these networks are both regulated by an overlapping set of transcription factors [refs]. It is also possible that this shared occupancy is also due to promiscuous binding at regions of open chromatin [refs].
+
 ***Figure 1*** ---------- table of features, and a couple of relevant venn diagrams
 
 
@@ -72,6 +84,7 @@ Using top three models, predictions around genes involving dorsal ventral activi
 -I've only done this with one model...
 
 
+## References
 
 
 

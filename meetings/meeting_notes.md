@@ -15,6 +15,7 @@ What I actually have
 
 For today
 -Get organized with applications!!!
+-write things for InR
 
 For next week
 
@@ -23,3 +24,5 @@ For next week
 -InR level analysis for known and predicted enhancers (population genetics, indels)
 
 -Transcription factor turnover, **motif turnover** for known enhancers
+
+-Work on filling in references
