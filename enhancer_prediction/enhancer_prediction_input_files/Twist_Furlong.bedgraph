@@ -1,7 +1,7 @@
 browser hide all
 browser pack refGene encodeRegions
 browser full altGraph
-track type=bedGraph name="Furlong chip-chip twi" description="BedGraph format" visibility=full color=200,100,0 altColor=0,100,200 priority=20
+track type=bedGraph name="Furlong chip-chip twist" description="BedGraph format" visibility=full color=200,100,0 altColor=0,100,200 priority=20
 chr3R	938423	940435	6
 chr3R	15175907	15176702	6
 chr2L	15485564	15487215	6

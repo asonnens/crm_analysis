@@ -9,6 +9,8 @@
 import glob
 import scipy, numpy
 import math
+import random
+import heapq
 from collections import defaultdict
 ###############################################################################
 
@@ -16,7 +18,7 @@ from collections import defaultdict
 bedfiles = glob.glob("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/*.bedgraph")
 phast_files = glob.glob("/mnt/home/sonnens2/crm_analysis/update/other_files/phastcons/*.pp")
 histone_files = glob.glob("/mnt/home/sonnens2/crm_analysis/update/other_files/Furlong_bits/*.wig")
-
+axt_files = glob.glob("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/axt_summary_files/*.txt")
 
 class TF(object):
     """This class includes attributes of putative transcription factors"""
@@ -155,6 +157,54 @@ class Enhancer(object):
                     self.feature_list.append(feature_type)    
             else:
                 self.filter_bedfile(self.chr, line, dataset, method, protein)
+     ###########################################################################
+     #Functions for axt summary files
+     ########################################################################### 
+
+    def filter_axt(self, chr, line, dataset, method, protein):
+        #########################################################
+        #
+        #
+        #
+        #########################################################
+        eachline = line.split(" ")
+        if self.coord1 >= int(eachline[3]) or self.coord2 <= int(eachline[2]):
+            pass
+        else:
+            fragment_length = float(int(eachline[3]) - int(eachline[2]))
+            fragment_coords = self.chr + "\t" + str(eachline[2]) + "\t" + str(eachline[3])
+            if int(eachline[3]) > self.coord2:
+                fragment_coords = self.chr + "\t" + str(eachline[2]) + "\t" + str(self.coord2)
+                fragment_length = fragment_length - (int(eachline[3]) - self.coord2)
+            if int(eachline[2]) < self.coord1:
+                fragment_coords = self.chr + "\t" + str(self.coord1) + "\t" + str(eachline[3])
+                fragment_length = fragment_length - (self.coord1 - int(eachline[2]))
+            if float(int(eachline[3]) - int(eachline[2])) > 0:
+                blastZscore = ((float(eachline[8].strip()) * float(fragment_length))/(float(int(eachline[3]) - int(eachline[2]))))/(float(self.coord2 - self.coord1)/float(100))
+                if blastZscore > 10000:
+                    print eachline[8].strip(), fragment_length, int(eachline[3]) - int(eachline[2]), self.coord2 - self.coord1, (self.coord2 - self.coord1)/100, blastZscore
+            else:
+                blastZscore = 0 
+            EvoFactor = TF(protein, fragment_coords, blastZscore, method, dataset)
+            self.add_TF(EvoFactor)
+
+    def read_axt(self, infile, filename):
+        #########################################################
+        #
+        #
+        #
+        #########################################################
+        if self.chr not in filename:
+            infile.close()
+        else:
+            file_no_path = filename.replace("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/axt_summary_files/", "")
+            species = file_no_path.replace(self.chr + ".dm3.", "")
+            species = species.replace(".summary.txt", "")
+            feature_type = species + "," + "blastZ" + "," + "axt"
+            if feature_type not in self.feature_list:
+                self.feature_list.append(feature_type)
+            for line in infile:
+                self.filter_axt(self.chr, line, species, "axt", "blastZ")
 
      ###########################################################################
      #Functions for wigfiles
@@ -222,15 +272,21 @@ class Enhancer(object):
         #depending on filetype, feeds file into appropriate function
         #########################################################
         infile = open(filename)
-        filetype, first_line = self.check_file_type(infile)
-        filename_ID = filename.split("/")[-1]
+        if "summary.txt" in filename:
+            filetype = "text"
+            first_line = ""
+        else:
+            filetype, first_line = self.check_file_type(infile)
+            filename_ID = filename.split("/")[-1]
         #print "reading ", filename_ID + " for " + self.status + " enhancer of " + self.gene
         dataset = ""
         method = ""
         protein = ""
         if filetype == "bedgraph":
             self.read_bedgraph(infile)
-        if filetype == "wig" or "wig2":
+        elif filetype == "text":
+            self.read_axt(infile, filename)
+        elif filetype == "wig" or "wig2":
             if self.chr in infile.read():
                 infile.seek(0)
                 self.read_wigfile(infile, first_line, filename_ID)
@@ -267,7 +323,7 @@ class Enhancer_compare(object):
     #unincorporated feature files associated with these enhancers
     ###########################################################################
 
-    def __init__(self, enhancer_list, list_name, input_info = bedfiles):
+    def __init__(self, enhancer_list, list_name, input_info = (bedfiles + axt_files)):
         #########################################################
         #attributes of Enhancer_compare object include:
         #enhancer list, and unincorporated feature files
@@ -378,13 +434,14 @@ class Enhancer_compare(object):
         outfilename = "/mnt/home/sonnens2/crm_analysis/output_data/" + \
                        self.list_name + "_" + "summary_info.csv"
         outfile = open(outfilename, "w")
-        outfile.write("name,gene,expr,status,distance_from_TSS,")
+        outfile.write("name,status,")
         key_list= []
         feature_list = []
         feature_list_output = []
         header_info = "" 
         for enhancer_items in self.enhancer_list:
             for i in enhancer_items.feature_list:
+                print i
                 if i not in feature_list:
                     feature_list.append(i)
                     ilist = i.split(",")
@@ -401,8 +458,7 @@ class Enhancer_compare(object):
         header_info = header_info[0:-1] + "\r\n"
         outfile.write(header_info)
         for i in self.enhancer_list:
-            out_string = (str(i.name) + "," + str(i.gene) + "," + str(i.expr) + "," +   \
-                          str(i.status) + "," +  str(i.distance) + ",")           
+            out_string = (str(i.name)  + "," +  str(i.status)  + ",")           
             for j in sorted(feature_list):
                 feature_count = 0
                 feature_scores = [0]
@@ -430,7 +486,7 @@ class Enhancer_find:
     #and the gene for which enhancers are being found
     ###########################################################################
 
-    def __init__(self, protein_list, coords, gene, TSS, expr, status, window_radius = 500, input_info = bedfiles):
+    def __init__(self, protein_list, coords, gene, TSS, expr, status, window_radius = 500, input_info = bedfiles + axt_files):
         """instantiates Enhancer_find set of actions"""
         #########################################################
         #features include: list of proteins that may contribute to this enhancer, 
@@ -504,30 +560,37 @@ class Enhancer_find:
         if len(my_feature_list) > 1:
             #method_weights = {"chip-chip":1, "chip-seq":3}
             protein_weights = {"Zelda180":1000, "hb":1, "twi":1, "gt":1, "kr":1, "DorsalR":10, "cad":1, "kni":1, "sna":1, "bcd":1,\
-                               "hry":1, "dl":1, "H3K27acW":10, "H3K27ac":10, "H3K4me1":10, "twist":10, "caudal":10, "bicoid":10,  \
-                               "kruppel":10,"knirps":10,"hunchback":10, "giant":10, "snail":10, "p300":10}
+                               "hry":1, "dl":1, "H3K27acW":1, "H3K27ac":10, "H3K4me1":10, "twist":10, "caudal":10, "bicoid":10,  \
+                               "kruppel":10,"knirps":10,"hunchback":10, "giant":10, "snail":10, "p300":10, "DL":0, "SNA":0, "TWI":0, "blastZ":0}
             my_coord_list = []
             my_weight_list = []
             distance_from_TSS = 0
             for i in my_feature_list:
                 my_coord_list.append(((i.coord2 - i.coord1)/2) + i.coord1)
                 my_weight_list.append(protein_weights[i.protein])
-            midpoint = int(numpy.average((my_coord_list), weights = (my_weight_list)))
-            putative_enhancer_coord1 = midpoint - self.window_radius
-            putative_enhancer_coord2 = midpoint + self.window_radius
-            putative_enhancer_coords =  self.chr + "\t" + \
+            if min(heapq.nlargest(2, my_weight_list)) > 0:
+                for i in my_feature_list:
+                    print i.protein, protein_weights[i.protein]
+                midpoint = int(numpy.average((my_coord_list), weights = (my_weight_list)))
+                putative_enhancer_coord1 = midpoint - self.window_radius
+                putative_enhancer_coord2 = midpoint + self.window_radius
+                putative_enhancer_coords =  self.chr + "\t" + \
                                        str(putative_enhancer_coord1) + "\t" + \
                                        str(putative_enhancer_coord2)
-            if self.TSS < midpoint:
-                distance_from_TSS = int(math.fabs(putative_enhancer_coord1 - self.TSS))
-            else:
-                distance_from_TSS = int(math.fabs(putative_enhancer_coord2 - self.TSS))        
-            putative_enhancer = Enhancer(self.gene, putative_enhancer_coords, \
+                if self.TSS < midpoint:
+                    distance_from_TSS = int(math.fabs(putative_enhancer_coord1 - self.TSS))
+                else:
+                    distance_from_TSS = int(math.fabs(putative_enhancer_coord2 - self.TSS))        
+                putative_enhancer = Enhancer(self.gene, putative_enhancer_coords, \
                                          distance_from_TSS, self.expr, self.status)
-            for i in my_feature_list:
-                putative_enhancer.add_TF(i)
-            return_variable = putative_enhancer   
-        return return_variable
+                for i in my_feature_list:
+                    putative_enhancer.add_TF(i)
+                return_variable = putative_enhancer   
+                return return_variable
+            else:
+                return 0
+        else:
+            return 0
 
     def get_TF(self, line, protein, method, dataset):
         #########################################################
@@ -677,6 +740,8 @@ class Enhancer_find:
         for i in enhancer_list:
             for bedgraph in bedfiles:
                 i.read_file(bedgraph)
+            for axt in axt_files:
+                i.read_file(axt)
             #for wigfile in phast_files:
             #    i.read_file(wigfile)
             for wigfile in histone_files:
