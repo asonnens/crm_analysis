@@ -15,7 +15,7 @@ require(caTools)
 #maybe two functions
 #is this an enhancer, if yes, what's its expression pattern
 
-setwd("shadow_enhancers/machine_learning_input/October")
+setwd("shadow_enhancers/machine_learning_input/December")
 
 known_data <- read.table("Known_enhancers.tsv", header = TRUE)
 indel <- read.table("known_enhancers_indel.tsv", header = TRUE)
@@ -47,15 +47,15 @@ FSna_put500 <- read.table("Furlong_Sna_putative500_Oct1.tsv", header = TRUE)
 FSna_prosp <- read.table("FSna_put.tsv", header = TRUE)
 FSna_put500 <- rename(FSna_put500, c("Zelda180" = "Zelda_seq", "Rushlow_Dorsal" = "Dorsal_seq", "MacArthur_Dorsal"= "Dorsal_chip", "Furlong_Snail" = "Snail_2014_chip",
                       "MacArthur_Snail" = "Snail_2009_chip", "Zeitlinger1_Twist" = "Twist_seq", "Furlong_Twist" = "Twist_2014_chip", "MacArthur_Twist" = "Twist_2009_chip",
-                      "Eisen2013_Bicoid" = "Bicoid_seq", "MacArthur_Bicoid" = "Bicoid_chip", "Eisen2010_Caudal"= "Caudal_seq", "MacArthur_Caudal" = "Caudal_chip",
-                      "Eisen2013_Hunchback" = "Hunchback_seq", "MacArthur_Hunchback" = "Hunchback_chip", "Eisen2013_Giant" = "Giant_seq", "MacArthur_Giant" = "Giant_chip",
-                      "MacArthur_Hairy" = "Hairy_chip", "Eisen2010_Knirps" = "Knirps_seq", "Eisen2013_Kruppel" = "Kruppel_seq", "KK_H3K27ac" = "H3K27ac_2015_seq",
+                      "Eisen2013_Bicoid" = "Bicoid_seq", "MacArthur_Bicoid" = "Bicoid_2009_chip", "Eisen2010_Caudal"= "Caudal_seq", "MacArthur_Caudal" = "Caudal_chip",
+                      "Eisen2013_Hunchback" = "Hunchback_2013_seq", "MacArthur_Hunchback" = "Hunchback_2009_chip", "Eisen2013_Giant" = "Giant_seq", "MacArthur_Giant" = "Giant_chip",
+                      "MacArthur_Hairy" = "Hairy_2009_chip", "Eisen2010_Knirps" = "Knirps_2010_seq", "Eisen2013_Kruppel" = "Kruppel_seq", "KK_H3K27ac" = "H3K27ac_2015_seq",
                       "White_H3K27ac" = "H3K27ac_2010_seq", "KK_H3K4me1" = "H3K4me1_2015_seq", "White_p300" = "p300_2010_seq"))  
-FSna_prosp <- rename(FSna_prosp, c("Zelda180" = "Zelda_seq", "Rushlow_Dorsal" = "Dorsal_seq", "MacArthur_Dorsal"= "Dorsal_chip", "Furlong_Snail" = "Snail_2014_chip",
-                      "MacArthur_Snail" = "Snail_2009_chip", "Zeitlinger1_Twist" = "Twist_seq", "Furlong_Twist" = "Twist_2014_chip", "MacArthur_Twist" = "Twist_2009_chip",
+FSna_prosp <- rename(FSna_prosp, c("Zelda180" = "Zelda_2011_seq", "Rushlow_Dorsal" = "Dorsal_2015_seq", "MacArthur_Dorsal"= "Dorsal_2009_chip", "Furlong_Snail" = "Snail_2014_chip",
+                      "MacArthur_Snail" = "Snail_2009_chip", "Zeitlinger1_Twist" = "Twist_2011_seq", "Furlong_Twist" = "Twist_2014_chip", "MacArthur_Twist" = "Twist_2009_chip",
                       "Eisen2013_Bicoid" = "Bicoid_seq", "MacArthur_Bicoid" = "Bicoid_chip", "Eisen2010_Caudal"= "Caudal_seq", "MacArthur_Caudal" = "Caudal_chip",
-                      "Eisen2013_Hunchback" = "Hunchback_seq", "MacArthur_Hunchback" = "Hunchback_chip", "Eisen2013_Giant" = "Giant_seq", "MacArthur_Giant" = "Giant_chip",
-                      "MacArthur_Hairy" = "Hairy_chip", "Eisen2010_Knirps" = "Knirps_seq", "Eisen2013_Kruppel" = "Kruppel_seq", "KK_H3K27ac" = "H3K27ac_2015_seq",
+                      "Eisen2013_Hunchback" = "Hunchback_2013_seq", "MacArthur_Hunchback" = "Hunchback_2009_chip", "Eisen2013_Giant" = "Giant_seq", "MacArthur_Giant" = "Giant_chip",
+                      "MacArthur_Hairy" = "Hairy_chip", "Eisen2010_Knirps" = "Knirps_2010_seq", "Eisen2013_Kruppel" = "Kruppel_2013_seq", "KK_H3K27ac" = "H3K27ac_2015_seq",
                       "White_H3K27ac" = "H3K27ac_2010_seq", "KK_H3K4me1" = "H3K4me1_2015_seq", "White_p300" = "p300_2010_seq"))  
 
 
@@ -87,16 +87,86 @@ FSna_train_cons <- FSna_train_cons
 FSna_all <- FSna_train_all
 current_put <- FSna_put500
 current_all <- read.table("Annotated_enhancers.tsv", header = TRUE)
+current_all <- current_all[c("gene","color","Zelda180", "Rushlow_Dorsal", "MacArthur_Dorsal", "Furlong_Snail", "MacArthur_Snail", 
+                             "Zeitlinger1_Twist", "Furlong_Twist", "MacArthur_Twist", "Eisen2013_Bicoid", "MacArthur_Bicoid", 
+							 "Eisen2010_Caudal", "MacArthur_Caudal", "Eisen2013_Hunchback", "MacArthur_Hunchback", "Eisen2013_Giant", "MacArthur_Giant", 
+							 "MacArthur_Hairy", "Eisen2010_Knirps", "Eisen2013_Kruppel", "KK_H3K27ac", "White_H3K27ac", "KK_H3K4me1", "White_p300")]
 
-plot(current_all$Rushlow_Dorsal ~ current_all$Eisen2013_Bicoid, col = current_all$color, pch = 20, ylab = "Dorsal", xlab = "Bicoid")
+current_all <- rename(current_all, c("Zelda180" = "Zelda_seq", "Rushlow_Dorsal" = "Dorsal_seq", "MacArthur_Dorsal"= "Dorsal_chip", "Furlong_Snail" = "Snail_2014_chip",
+                      "MacArthur_Snail" = "Snail_2009_chip", "Zeitlinger1_Twist" = "Twist_seq", "Furlong_Twist" = "Twist_2014_chip", "MacArthur_Twist" = "Twist_2009_chip",
+                      "Eisen2013_Bicoid" = "Bicoid_seq", "MacArthur_Bicoid" = "Bicoid_chip", "Eisen2010_Caudal"= "Caudal_seq", "MacArthur_Caudal" = "Caudal_chip",
+                      "Eisen2013_Hunchback" = "Hunchback_seq", "MacArthur_Hunchback" = "Hunchback_chip", "Eisen2013_Giant" = "Giant_seq", "MacArthur_Giant" = "Giant_chip",
+                      "MacArthur_Hairy" = "Hairy_chip", "Eisen2010_Knirps" = "Knirps_seq", "Eisen2013_Kruppel" = "Kruppel_seq", "KK_H3K27ac" = "H3K27ac_2015_seq",
+                      "White_H3K27ac" = "H3K27ac_2010_seq", "KK_H3K4me1" = "H3K4me1_2015_seq", "White_p300" = "p300_2010_seq"))  
+					  
+data1 <- current_all[,3:25]
+data1_scale <- scale(data1)
+current_all <- cbind(current_all[,1:2], data1_scale)
 
-text(current_all$Rushlow_Dorsal ~ current_all$Eisen2013_Bicoid, labels = current_all$gene, pos = 4, col = current_all$color, cex = 0.8)
+plot(current_all$Zelda_seq ~ current_all$Dorsal_seq, col = current_all$color, pch = 20, ylab = "Zelda_seq", xlab = "Dorsal_seq",)
+text(current_all$Zelda_seq ~ current_all$Dorsal_seq, labels = current_all$gene, pos = 4, col = current_all$color, cex = 0.8)
+plot(current_all$Dorsal_seq ~ current_all$Caudal_seq, col = current_all$color, pch = 20, ylab = "Dorsal", xlab = "Caudal")
+
+
+
+plot(current_all$Dorsal_seq ~ current_all$Dorsal_chip, pch = 21, bg = c("red", "cyan4") [unclass(current_all$color)])
+
+pairs(current_all[4:10], pch = 21, bg = c("red", "cyan4") [unclass(current_all$color)], lower.panel=NULL, labels=c("Dl_seq","Dl_chip","Sna_bits","Sna_chip", "Twi_seq", "Twi_bits", "Twi_chip"), font.labels=2, cex.labels=1)
+pairs(current_all[11:14], pch = 21, bg = c("red", "cyan4") [unclass(current_all$color)], lower.panel=NULL, labels=c("Bcd_seq", "Bcd_chip", "Cad_seq", "Cad_chip"), font.labels=2, cex.labels=2)
+pairs(current_all[15:21], pch = 21, bg = c("red", "cyan4") [unclass(current_all$color)], lower.panel=NULL, labels=c("Hb_seq", "Hb_chip", "Gt_seq", "Gt_chip", "Hry_chip", "Kni_seq", "Kr_seq"), font.labels=2, cex.labels=1)
+pairs(current_all[c(3,22:25)], pch = 21, bg = c("red", "cyan4") [unclass(current_all$color)], lower.panel=NULL, labels=c("Zld_seq", "H3K27ac_1", "H3K27ac_2", "H3K5me1", "p300"), font.labels=2, cex.labels=1)
+pairs(current_all[c(3,4,11,15)], pch = 21, bg = c("red", "cyan4") [unclass(current_all$color)], lower.panel=NULL, labels=c("Zld_seq", "Dl_seq", "Bcd_seq", "Hb_seq"), font.labels=2, cex.labels=2)
+pairs(current_all[c(3,4,11,15)], pch = 21, bg = c("red", "cyan4") [unclass(current_all$color)], upper.panel=NULL, labels=c("Zld_seq", "Dl_seq", "Bcd_seq", "Hb_seq"), font.labels=2, cex.labels=2)
 
 library(ggplot2)
 library(GGally)
-ggpairs(with(current_all, data.frame(Rushlow_Dorsal, Furlong_Twist, Eisen2013_Bicoid, MacArthur_Hairy)))
 
-putPlot(p, ggplot(current_all, aes(x=Dorsal, colour=color)) + stat_ecdf(), 1,1)
+ggpairs(with(current_all, data.frame(Dorsal_seq, Dorsal_chip, Snail_2014_chip, Snail_2009_chip)))
+pairs(~Dorsal_seq+Dorsal_chip, data=current_all,
+      upper.panel= panel.cor,
+      pch=21, bg = c("red", "cyan4") [unclass(current_all$color)])
+	  
+	  
+pairs(~Snail_2014_chip+Snail_2009_chip, data=current_all,
+       upper.panel= panel.cor,
+      pch=21, bg = c("red", "cyan4") [unclass(current_all$color)])
+
+pairs(~Snail_2014_chip+Snail_2009_chip, data=current_all,
+      lower.panel=panel.smooth, upper.panel= panel.cor,
+      pch=21, bg = c("red", "cyan4") [unclass(current_all$color)])
+
+pairs(~Twist_seq+Twist_2014_chip+Twist_2009_chip, data=current_all,
+      upper.panel= panel.cor,
+      pch=21, bg = c("red", "cyan4") [unclass(current_all$color)])
+	  
+
+pairs(~Hunchback_seq+Hunchback_chip, data=current_all
+      , upper.panel= panel.cor,
+      pch=21, bg = c("red", "cyan4") [unclass(current_all$color)])
+	  
+pairs(~Giant_seq+Giant_chip, data=current_all
+      , upper.panel= panel.cor,
+      pch=21, bg = c("red", "cyan4") [unclass(current_all$color)])
+	  
+	  
+lower.panel=NULL, labels=c("SL","SW","PL","PW"), font.labels=2, cex.labels=4.5) 
+plot(current_all$Dorsal ~ current_all$Hairy, col = current_all$color, pch = 20, ylab = "Dorsal", xlab = "Hairy")
+
+text(current_all$Dorsal ~ current_all$Hairy, labels = current_all$gene, pos = 4, col = current_all$color, cex = 0.8)
+
+plot(current_all$Snail ~ current_all$Hairy, col = current_all$color, pch = 20, ylab = "Snail", xlab = "Hairy")
+
+text(current_all$Snail ~ current_all$Hairy, labels = current_all$gene, pos = 4, col = current_all$color, cex = 0.8)
+
+plot(current_all$Snail ~ current_all$Bicoid, col = current_all$color, pch = 20, ylab = "Snail", xlab = "Bicoid")
+
+text(current_all$Snail ~ current_all$Bicoid, labels = current_all$gene, pos = 4, col = current_all$color, cex = 0.8)
+
+library(ggplot2)
+library(GGally)
+ggpairs(with(current_all, data.frame(Dorsal_seq, Twist_2014_chip, Bicoid_seq, Hairy_chip)))
+
+putPlot(p, ggplot(current_all, aes(x=Dorsal_seq, colour=color)) + stat_ecdf(), 1,1)
 
 with(current_all, text(current_all$Rushlow_Dorsal ~ current_all$Eisen2013_Bicoid, labels = row.names(current_all$gene), pos = 4))
 
