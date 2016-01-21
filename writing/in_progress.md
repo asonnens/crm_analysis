@@ -1,3 +1,6 @@
+## Abstract
+
+
 ## Introduction
 
 
@@ -16,11 +19,7 @@
 
 ##Methods
 
-### 1
 
-### 2
-
-### 3
 
 
 ## Results  
@@ -56,25 +55,17 @@ We tested the efficacy of different features using a random forest algorithm tra
 [of the ones that perform the best, this is how leaving out one or many features influences performance]
 [of the top few subsets, they performed X well on various version of predicted enhancers around well understood genes]
 
--description of random forest
--which features are the most important in this analysis
--dropping any one feature does not improve results, also does not dramatically hurt results
-***Figure 4*** -make this figure to reflect above two points
--including different subsets of the Stark reporters in training and testing dramatically influences results
--what results look like with no filtering
--what results look like after filtering based on presence of clustered TF binding
-***Figure 5a*** - some kind of compilation figure of ROC and PR data?
 
-### 4 Predicting enhancer expression patterns
+### Predicting enhancer expression patterns
 -how methods for this do or don't differ from methods for predicting activity
 -description of random forest
 -which features are most important (surprisingly, mostly the same ones)
-***Figure 5b***
 
-***Figure 6*** --- flow chart! (this should maybe go in methods?)
+***[to complete-- how these algorithms perform at predicting expression patterns]***
+***[likely compound error rates]***
+***[how this compares to Furlong's methods accuracy]***
 
-How well predictions recover known regulatory elements
-How well predictions recover known regulatory elements using different sets of assumptions
+
 -Assumptions
 	-the subset of the Stark dataset used for training the random forest
 	-random forest settings
@@ -82,10 +73,9 @@ How well predictions recover known regulatory elements using different sets of a
 	-the size potential enhancers are set at
 ***Figure 7*** -some kind of compilation figure for above 
 
+### Shadow enhancers etc. ###
 
-Using top three models, predictions around genes involving dorsal ventral activity
--I've only done this with one model...
-
+## Discussion
 
 ## References
 
