@@ -468,78 +468,128 @@ vertical-align:1px;
 </style>
 </head>
 <body>
+<h2>Abstract</h2>
+
 <h2>Introduction</h2>
 
-<p>-Genetic function and molecular evolution are linked. <br>
--The connection between them is more complex in regulatory DNA, where the rules underpinning how sequence leads to function are less well understood. </p>
+<p>-Regulatory DNA architecture is a subject that is still not fully understood</p>
 
-<p>-In coding DNA, redundancy is frequently associated with very rapid evolution-- paralogs diverge extremely rapidly. <br>
--However, in regulatory DNA, redundancy appears to play a very different role. <br>
-    -Binding site redundancy is a well known aspect of enhancer function, and redundancy of entire  regulatory modules in some cases appears to be very well conserved between species, although    in other cases appears to be associated with rapid phenotypic change. </p>
+<ul>
+<li>Most data points to it being far more complex than originally thought
 
-<p>-Computational identification of enhancers-- history</p>
-
-<p>-To get a better understanding of the role of redundant regulatory elements in Drosophila gene regulation, we used machine learning to predict active enhancers in early Drosophila development, and their expression patterns. <br>
-    -Transcription factor binding and histone modification chip data was used as predictors of  enhancer activity<br>
-    -A set of in-vivo reporters in Drosophila embryos was used as the basis for training a supervised   random forest.<br><br>
-    -Accuracy of these predictions was additionally assessed against well annotated enhancers not   included in the training or testing sets.<br>
-    - Enhancers were then predicted in windows around genes known to be active in early     development. </p>
+<ul>
+<li>superenhancers, shadow enhancers, etc.</li>
+</ul>
+</li>
+<li>it's difficult to know non-coding function without extensive in-vivo testing</li>
+<li>enhancer prediction based on genomic cues is the future</li>
+<li>simplistic enhancer prediction can be misleading-- e.g. calling all DNase1 hypersensitive regions as enhancers</li>
+<li>Machine learning and computational enhancer prediction</li>
+<li>Stark dataset provides unique opportunity for testing limits of computational enhancer prediction</li>
+<li>etc. </li>
+</ul>
 
 <p>-We found...</p>
 
+<p>##Methods</p>
+
 <h2>Results</h2>
 
-<h3>Analysis of features used as predictors</h3>
+<h3>Identifying potential enhancers</h3>
 
-<p>-Reasons for including these particular datasets<br>
--Dataset provenance<br>
--Brief discussion of how features do and don't overlap<br>
--how features overlap with known, well annotated enhancers<br>
-<strong><em>Figure 1</em></strong> ---------- table of features, and a couple of relevant venn diagrams</p>
+<p>We chose our genes of interest based on an annotated mesodermal or neurogenic ectodermal expression pattern, as based on in situs of the Berkeley Drosophila Genome Project. We identified potential enhancers de-novo based on clustering of transcription factors within a fifty kb window around genes of interest. We used several parameters as a threshold for 'clustering'-- the presence of at least two transcription factor peaks, the presence of at least three transcription factor peaks, or the presence of peaks for Dorsal, Snail and Twist. These regions were then classified as putative enhancers or background binding by a random forest algorithm trained regions from the Fly Enhancer Resource. We also identified and classified enhancers around several genes with very well understood regulation, with the intent of using these enhancers as a secondary validation step. </p>
 
-<h3>Characteristics of training set for supervised machine learning</h3>
+<h3>Training Set</h3>
 
-<p>-The size of the training set<br>
--how Stark active and inactive reporters correlate with features<br>
-<strong><em>Figure 2</em></strong> ---- heatmaps<br>
--description of my annotations of expression patterns<br>
--Example images (maybe should go in methods?)<br>
-<strong><em>Figure 3---</em></strong> </p>
+<p>The Stark Lab Fly Enhancers Resource includes X reporters, Y of which show activity. However, we filtered for regions that are highly active in stage 4-6 embryos. only Z of these show activity. The Fly Enhancers resource also includes annotations of expression patterns. However, at stage 4-6 embryos this included Q unique patterns, which led to small sample sizes per expression pattern. This is further complicated for the purposes of machine learning by the fact that many embryos were assigned multiple expression patterns. For our analysis we manually re-annotated the expression patterns for all highly active reporters, based on photos of in-situs from the Stark website, using broader categories (anterior, central and posterior expression, and ectoderm, mesoderm, and endoderm expression).</p>
+
+<p>All reporters were cross-compared with various genomics datasets, to determine the characteristic features of inactive reporters and active reporters with various expression patterns. These included data for evolutionary conservation, transcription factor occupancy [refs], specific histone marks[refs], and motif enrichment [refs]-- Table 1. </p>
+
+<p>Phylogenetic footprinting has been an effective method of identifying enhancers in some species. Sequence conservation has also been observed in some Drosophila regulatory elements, but using it as a predictor is complicated by the generally rapid rate of divergence in regulatory sequences, and the compact and largely conserved nature of the Drosophila genome. Looking at pairwise conservation between various Drosophila species and Drosophila melanogaster in reporters, there is no visible relationship between conservation and activity. A comparison of reporter sequences that are active at all embryonic stages relative to sequences that are inactive across all embryonic stages does not show a visible signal. <br>
+<strong><em>Figure 1</em></strong> - see figure-- shows conservation in simulans, yakuba, pseudoobsura, and grimshawi in all reporters, relative to melanogaster.<br>
+<a href="https://raw.githubusercontent.com/asonnens/crm_analysis/master/writing/figure1/Active_Inactive_conservation.png">https://raw.githubusercontent.com/asonnens/crm_analysis/master/writing/figure1/Active_Inactive_conservation.png</a></p>
+
+<p>There are a large number of publicly available chromatin immunoprecipitation datasets, through ModEncode, the Berkeley Drosophila Genome Project, and others. We chose to use occupancy information from a range of transcription factors and several histone marks. Dorsal, Snail and Twist are all known to co-regulate dorsal-ventral patterning in early embryonic development; clustered occupancy of these proteins has been successfully used to identify DV-enhancers [refs]. However, they have also been found to bind enhancers that regulate genes more typically associated with anterior-posterior development, such as gap genes <em>orthodenticle</em>, and <em>knirps</em>, and pair rule genes <em>runt</em> and <em>hairy</em> [refs]. For this reason, we also chose to use as predictors transcription factors specifically associated with anterior-posterior regulatory networks, including Bicoid, Caudal, Hairy, Knirps, Kruppel, and Giant [refs]. We also included the 'pioneer' transcription factor Zelda [refs], H3K27ac [refs] and H3K4me1 [refs] histone marks, and the histone acetyltransferase Nejire (also known as p300) [refs]. There are a large number of chromatin immunoprecipitation studies that have made their data publicly available. Notably, in 2009 the Berkeley <em>Drosophila</em> Transcription Project released data from ChIP-chip on twenty-one transcription factors involved in early embryonic development. Since then, several studies from the same lab [refs] and others [refs] have released overlapping datasets, frequently obtained from higher resolution[refs] techniques like ChIP-seq[refs]. The regions identified as bound by a given transcription factor using different techniques typically do not completely overlap (<strong><em>figure 2</em></strong> part 1 representative venn diagrams), and their resulting scores do not perfectly correlate <br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_1/Venn_diagrams.png?raw=true">https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_1/Venn_diagrams.png?raw=true</a><br>
+(<strong><em>figure 2</em></strong> part 2- compilation of correlation heatmaps). <br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/AP_TFs_correlation_heatmap.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/AP_TFs_correlation_heatmap.png</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/DV_TFs_correlation_heatmap.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/DV_TFs_correlation_heatmap.png</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/Dl_motif_chip_correlation_heatmap.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/Dl_motif_chip_correlation_heatmap.png</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/Sna_motif_chip_correlation_heatmap.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/Sna_motif_chip_correlation_heatmap.png</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/Twi_motif_chip_correlation_heatmap.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/Twi_motif_chip_correlation_heatmap.png</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/chromatin_chip_correlation_heatmap.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/chromatin_chip_correlation_heatmap.png</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/evolution_correlation_heatmap.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/evolution_correlation_heatmap.png</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/motif_correlation_heatmap.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/motif_correlation_heatmap.png</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/all_chip_correlation_heatmap.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure2/Part_2/all_chip_correlation_heatmap.png</a><br>
+Even regions identified using the same technique by different labs, or using different antibodies even within a given experiment frequently produce variable results (refs, <strong><em>figure 2</em></strong> part 3 -make this figure-- venn diagrams for different antibodies same lab). For this reason, we chose to include multiple datasets for some features. Our final list of ChIP datasets included twenty-three predictors, encompassing fourteen unique features. </p>
+
+<p>Interestingly, in addition to Dorsal, Snail and Twist binding to enhancers for AP development genes, transcription factors typically associated with AP development also appear to bind to enhancers for DV genes, and peak scores for these factors do not clearly correlate with AP enhancers than with DV enhancers. It is possible these networks are both regulated by an overlapping set of transcription factors [refs]. It is also possible that this shared occupancy is also due to promiscuous binding at regions of open chromatin [refs]. (<strong><em>figure 2</em></strong> part 3 make this figure-- screen shots of places where AP TFs bind at unexpected genes)</p>
+
+<p>Motifs have a relationship with binding of transcription factors and with regulatory function. We used PWMs associated with Dorsal, Snail and Twist binding from the JASPAR database, and assessed the number of high-affinity matches in the Stark regulatory regions using MAST. This led to a final set of predictors which included 39 unique features ( <strong><em>Table 1</em></strong> table of features, and their provenance)   Interestingly, there was only minimal correlation between scores for different motifs of the same transcription factor, and even less between motifs for a transcription factor and actually occupancy in stage 4-6 embryos as measured by ChIP (<strong><em>Figure 2</em></strong> part 2 with the rest of the correlation heat maps, currently).</p>
+
+<p>Although random forest algorithms are generally robust to co-linearity between features and non-normality of predictors, we scaled feature scores for all predictors around 0, and also created secondary datasets wherein features that are highly correlated with each other were dropped, and datasets in which the first 10 and 25 principal components were used instead of scores for individual features.<br>
+<strong><em>Table 2</em></strong>, <strong><em>figure 3</em></strong> Plot of PCA1 x PCA2<br>
+(table of covariation of features)<br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure3/PCA_reporters.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure3/PCA_reporters.png</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure3/scree_plot_supplement.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure3/scree_plot_supplement.png</a></p>
 
 <h3>Predicting enhancer activity</h3>
 
-<p>-description of random forest<br>
--which features are the most important in this analysis<br>
--dropping any one feature does not improve results, also does not dramatically hurt results<br>
-<strong><em>Figure 4</em></strong> -make this figure to reflect above two points<br>
--including different subsets of the Stark reporters in training and testing dramatically influences results<br>
--what results look like with no filtering<br>
--what results look like after filtering based on presence of clustered TF binding<br>
-<strong><em>Figure 5a</em></strong> - some kind of compilation figure of ROC and PR data?</p>
+<p>We tested the efficacy of different features using a random forest algorithm trained and tested on a subsets of the reporters from the Fly Enhancer Resource. </p>
+
+<p>Using all highly active reporters, and all inactive reporters as a pool from which to sample training and test sets, a random forest algorithm was able to predict activity of the test set with X degree accuracy, and Y AUC. However, as there are ~7000 inactive reporters at this stage of development, relative to ~400 active reporters, this is a highly unbalanced dataset, which biases most machine learning algorithms to overestimate the occurrence of the majority event. A precision recall curve shows this to be the case-- area under precision recall curves is substantially lower than under the ROC curve (<strong><em>figure 4</em></strong> part 1- ROC and PR curves for kitchen sink approach). <br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure4/Part1/ROC_all_data_scale.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure4/Part1/ROC_all_data_scale.png</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure4/Part1/PR_all_data_scale.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure4/Part1/PR_all_data_scale.png</a><br>
+However, removing highly correlated elements or employing the first 25 principal components (which make up 99% of the predictors variation), have no significant impact on area under ROC or precision-recall curves, and only employing the first ten PCs substantially hurts performance on precision-recall (<strong><em>figure 4</em></strong> part 2-- bargraphs of area under curves). <br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure4/Part2/AUC_various_variables.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure4/Part2/AUC_various_variables.png</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure4/Part2/PRAUC_various_variables.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure4/Part2/PRAUC_various_variables.png</a><br>
+As reducing the number of features did not improve predictions and made it more difficult to interpret biological significance, we used all 39 features for further analyses.<br>
+Interestingly, when using all features, or excluding highly correlated features, Zelda binding, Bicoid binding, and Snail binding are by far the most predictive features. Surprisingly (given figure 1), conservation with distantly related species of Drosophila also contributes to predictive accuracy, more than conservation in more closely related species or many other features. (<strong><em>figure 4</em></strong> part 3-- importance plots).<br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure4/Part3/Importance_all_data.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure4/Part3/Importance_all_data.png</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure4/Part3/Importance_reduced_data.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure4/Part3/Importance_reduced_data.png</a></p>
+
+<p>As genomic regions identified as putative enhancers by clustered transcription factor occupancy are by definition bound by multiple transcription factors, it seemed probable that better predictive accuracy could be achieved by restricting the training set to regions that are similarly bound, to distinguish between clusters of occupancy resulting from background binding and truly active regions. We filtered the training and testing set by several parameters, to only include reporters that are co-bound by Dorsal, Snail and Twist, or reporters that are bound by at least two transcription factors, at least one of which is Dorsal, Snail, Twist, or Zelda. In each case we also balanced uneven datasets by selecting equal numbers of the most highly bound active and inactive reporters (as measured by Euclidean Distance) from each filtered dataset. Based on AUC of ROC curves, balanced (blue) and unbalanced (gray) datasets were approximately equally effective at training the random forest, and more restrictive filtering by multiple transcription factors lowered overall accuracy. Based on AUC of precision-recall graphs, balanced datasets are significantly more effective than unbalanced datasets. <strong><em>figure 5</em></strong> bar charts of AUC for ROC and PR curves, various models<br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure5/Figure5_part1/AUC_various_models.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure5/Figure5_part1/AUC_various_models.png</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure5/Figure5_part1/PRAUC_various_models.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure5/Figure5_part1/PRAUC_various_models.png</a></p>
+
+<h3>Testing against validated enhancers***</h3>
+
+<p>We tested each random forest on a list of enhancers predicted in a 50kb window around genes with well studied regulation in stage 4-6 embryos. This was done with the assumption that annotated regulatory regions around these genes are effective measures of true-positives, and that as the regions have been fairly well studied, additional enhancers identified within this window are likely to be false positives. </p>
+
+<p>Putative enhancers were identified by clustering of transcription factors. We used several different criteria-- clustered binding of Dorsal, Snail, and Twist, or binding of at least two transcription factors with one of them being Dorsal, Snail, Twist, or Zelda. Surprisingly, in every case random forest trained on a balanced datasets identified 100% of clusters as active. </p>
+
+<p>Random forests trained on unbalanced datasets did recover a significant number of false positives, although relatively fewer. Models trained on reporters filtered by the presence of Zelda binding were able to correctly identify the highest proportion of annotated enhancer sequence, relative to un-annotated regions. <strong><em>figure 5 part 2</em></strong> these bar graphs are hideous, I need to compile them into something more attractive.</p>
+
+<h3>Analysis of feature importance</h3>
+
+<p>Importance analysis of this random forest shows that as in other models, Zelda, Bicoid and Snail binding are the three most important parameters for correctly identifying active regions, and conservation in distantly related Drosophila species is more important than conservation in closely related species. We evaluated the importance of categories of features by training random forests on the same pool of reporters, but leaving out categories of predictors (e.g. all conservation data, all motif data, etc.). Based on AUC of ROC curves, leaving out any single category of features had no effect on prediction success. However, based on AUC of precision-recall curves, leaving out Zelda binding or occupancy information for Dorsal-Ventral transcription factors (Dorsal, Snail, and Twist) caused a substantial drop in accuracy.<br>
+<strong><em>figure 6</em></strong> bar charts of leave-factor-out analysis<br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure6/Best_model_importance.png?raw=true">https://github.com/asonnens/crm_analysis/blob/master/writing/figure6/Best_model_importance.png?raw=true</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure6/Dropping_features_AUC.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure6/Dropping_features_AUC.png</a><br>
+<a href="https://github.com/asonnens/crm_analysis/blob/master/writing/figure6/Dropping_features_PRAUC.png">https://github.com/asonnens/crm_analysis/blob/master/writing/figure6/Dropping_features_PRAUC.png</a></p>
 
 <h3>Predicting enhancer expression patterns</h3>
 
 <p>-how methods for this do or don't differ from methods for predicting activity<br>
 -description of random forest<br>
--which features are most important (surprisingly, mostly the same ones)<br>
-<strong><em>Figure 5b</em></strong></p>
+-which features are most important (surprisingly, mostly the same ones)</p>
 
-<p>De-novo predictions around genes known to be active<br>
--potential enhancers are identified based on clustered TF occupancy<br>
--enhancer defined as window of X-bp around center of TF cluster<br>
-<strong><em>Figure 6</em></strong> --- flow chart! (this should maybe go in methods?)</p>
+<p><strong><em>[to complete-- how these algorithms perform at predicting expression patterns]</em></strong><br>
+<strong><em>[likely compound error rates]</em></strong><br>
+<strong><em>[how this compares to Furlong's methods accuracy]</em></strong></p>
 
-<p>How well predictions recover known regulatory elements<br>
-How well predictions recover known regulatory elements using different sets of assumptions<br>
--Assumptions<br>
+<p>-Assumptions<br>
     -the subset of the Stark dataset used for training the random forest<br>
     -random forest settings<br>
     -how clusters of TF binding are classified as putative enhancers<br>
     -the size potential enhancers are set at<br>
 <strong><em>Figure 7</em></strong> -some kind of compilation figure for above </p>
 
-<p>Using top three models, predictions around genes involving dorsal ventral activity<br>
--I've only done this with one model...</p>
+<h3>Shadow enhancers etc.</h3>
+
+<h2>Discussion</h2>
+
+<h2>References</h2>
 </body>
 </html>
 <!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->
