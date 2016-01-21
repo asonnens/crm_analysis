@@ -66,7 +66,7 @@ Random forests trained on unbalanced datasets did recover a significant number o
 ### Analysis of feature importance
 
 Importance analysis of this random forest shows that as in other models, Zelda, Bicoid and Snail binding are the three most important parameters for correctly identifying active regions, and conservation in distantly related Drosophila species is more important than conservation in closely related species. We evaluated the importance of categories of features by training random forests on the same pool of reporters, but leaving out categories of predictors (e.g. all conservation data, all motif data, etc.). Based on AUC of ROC curves, leaving out any single category of features had no effect on prediction success. However, based on AUC of precision-recall curves, leaving out Zelda binding or occupancy information for Dorsal-Ventral transcription factors (Dorsal, Snail, and Twist) caused a substantial drop in accuracy.
-
+***figure 6*** bar charts of leave-factor-out analysis
 
 
 ### Predicting enhancer expression patterns
