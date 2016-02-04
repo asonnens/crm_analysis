@@ -7,7 +7,6 @@ https://www.overleaf.com/4143714zkfpmd
 * DEFINITELY not complete (got a little sidetracked by InR project and interview)
 
 * Results draft closer to complete, introduction and methods underway
-* Abstract draft 1
 
 Goals for this week
 
