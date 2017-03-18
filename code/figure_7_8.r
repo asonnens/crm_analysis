@@ -44,7 +44,7 @@ all_data <- read.table("all_data.tsv", header = TRUE)
 all_data <- all_data[c("enhancer","status","Zelda_2011_seq","Dorsal_2015_seq","Dorsal_2009_chip","Snail_2014_chip","Snail_2009_chip","Twist_2011_seq","Twist_2014_chip","Twist_2009_chip","Bicoid_2013_seq","Bicoid_2009_chip","Caudal_2010_seq","Caudal_2009_chip","Hunchback_2013_seq","Hunchback_2009_chip","Giant_2013_seq","Giant_2009_chip","Kruppel_2013_seq","Knirps_2010_seq","Hairy_2009_chip","H3K27ac_2015_seq","H3K27ac_2010_seq","H3K4me1_2015_seq","p300_2010_seq", "Zld_motif_sanger", "Zld_motif_solexa", "Dorsal_motif_FlyReg","Dorsal_motif_NBT","Snail_motif_FlyReg","Snail_motif_Sanger","Snail_motif_solexa","Twist_motif_FlyReg","Twist_motif_da","Dsim","Dsec","Dyak","Dere","Dana","Dpse","Dwil","Dvir","Dgri")]
 long_name <- c("enhancer","status","Zelda_2011_seq","Dorsal_2015_seq","Dorsal_2009_chip","Snail_2014_chip","Snail_2009_chip","Twist_2011_seq","Twist_2014_chip","Twist_2009_chip","Bicoid_2013_seq","Bicoid_2009_chip","Caudal_2010_seq","Caudal_2009_chip","Hunchback_2013_seq","Hunchback_2009_chip","Giant_2013_seq","Giant_2009_chip","Kruppel_2013_seq","Knirps_2010_seq","Hairy_2009_chip","H3K27ac_2015_seq","H3K27ac_2010_seq","H3K4me1_2015_seq","p300_2010_seq", "Zld_motif_sanger", "Zld_motif_solexa", "Dorsal_motif_FlyReg","Dorsal_motif_NBT","Snail_motif_FlyReg","Snail_motif_Sanger","Snail_motif_solexa","Twist_motif_FlyReg","Twist_motif_da","Dsim","Dsec","Dyak","Dere","Dana","Dpse","Dwil","Dvir","Dgri")
 short_name <- c("enhancer","status","Zld_11_s","Dl_15_s","Dl_09_c","Sna_14_c","Sna_09_c","Twi_11_s","Twi_14_c","Twi_09_c","Bcd_13_s","Bcd_09_c","Cad_10_s","Cad_09_c","Hb_13_s","Hb_09_c","Gt_13_s","Gt_09_c","Kr_13_s","Kni_10_s","Hry_09_c","H3K27ac_15","H3K27ac_10","H3K4me1_15","p300_10", "Zld_m1", "Zld_m2", "Dl_m1","Dl_m2","Sna_m1","Sna_m2","Sna_m3","Twi_m1","Twi_m2","Dsim","Dsec","Dyak","Dere","Dana","Dpse","Dwil","Dvir","Dgri")
-colnames(all_data) <- short_name
+
 #Filtered reporters
 H3K4me1_train_cons <- read.table("cons_train_H3K4me1_2015_seq.tsv", header = TRUE)
 H3K4me1_train_all <- read.table("all_train_H3K4me1_2015_seq.tsv", header = TRUE)
@@ -54,6 +54,23 @@ Zld_train_cons <- read.table("cons_train_Zelda_2011_seq.tsv", header = TRUE)
 Zld_train_all <- read.table("all_train_Zelda_2011_seq.tsv", header = TRUE)
 Dl15_train_cons <- read.table("cons_train_Dorsal_2015_seq.tsv", header = TRUE)
 Dl15_train_all <- read.table("all_train_Dorsal_2015_seq.tsv", header = TRUE)
+Bcd13_train_cons <- read.table("cons_train_Bicoid_2013_seq.tsv", header = TRUE)
+Bcd13_train_all <- read.table("all_train_Bicoid_2013_seq.tsv", header = TRUE)
+Bcd09_train_cons <- read.table("cons_train_Bicoid_2009_chip.tsv", header = TRUE)
+Bcd09_train_all <- read.table("all_train_Bicoid_2009_chip.tsv", header = TRUE)
+Cad09_train_cons <- read.table("cons_train_Caudal_2009_chip.tsv", header = TRUE)
+Cad09_train_all <- read.table("all_train_Caudal_2009_chip.tsv", header = TRUE)
+Gt09_train_cons <- read.table("cons_train_Giant_2009_chip.tsv", header = TRUE)
+Gt09_train_all <- read.table("all_train_Giant_2009_chip.tsv", header = TRUE)
+Gt13_train_cons <- read.table("cons_train_Giant_2013_seq.tsv", header = TRUE)
+Gt13_train_all <- read.table("all_train_Giant_2013_seq.tsv", header = TRUE)
+Kr13_train_cons <- read.table("cons_train_Kruppel_2013_seq.tsv", header = TRUE)
+Kr13_train_all <- read.table("all_train_Kruppel_2013_seq.tsv", header = TRUE)
+Kni10_train_cons <- read.table("cons_train_Knirps_2010_seq.tsv", header = TRUE)
+Kni10_train_all <- read.table("all_train_Knirps_2010_seq.tsv", header = TRUE)
+Hry09_train_cons <- read.table("cons_train_Hairy_2009_chip.tsv", header = TRUE)
+Hry09_train_all <- read.table("all_train_Hairy_2009_chip.tsv", header = TRUE)
+
 
 #Random data
 random_data <- data.frame(replicate(41,sample(0:1000,7250,rep=TRUE)))
@@ -64,6 +81,14 @@ name_column <- data.frame(replicate(1,sample(c("on", "off"),300, rep = TRUE)))
 random_balance <-cbind(all_data[1:300,0:1], name_column, random_balance)
 colnames(random_data) <- long_name
 colnames(random_balance) <- long_name
+
+random_bcd <- data.frame(replicate(41, sample(0:1000, 371, rep = TRUE)))
+random_bcd <- cbind(Bcd13_train_all[,0:2], random_bcd)
+colnames(random_bcd) <- long_name
+
+random_bcd_bal <- data.frame(replicate(41, sample(0:1000, 100, rep = TRUE)))
+random_bcd_bal <- cbind(Bcd13_train_cons[,0:2], random_bcd_bal)
+colnames(random_bcd_bal) <- long_name
 
 strata_2var <- function(dataset, variable_name, variable_table, variable_pos, dataframe_length = 14, second_val = 7, samples = 300){
 #this function stratifies a dataset by sixteen variables, 
@@ -227,14 +252,12 @@ enhancer_class_status_scale <- function(dataset, datatable, filename = "temp", s
 #Random forest predictions based on all data, scaled
 #Figure 6, Supplementary figure 9
 #unbalanced
+
 current_all <- all_data
-colnames(current_all) <- short_name
 current_tab <- table(all_data$status)
 current_target <- read.table("target_file.tsv", header = TRUE)
 prosp_target <- read.table("prospective_file.tsv", header = TRUE)
-colnames(prosp_target) <- short_name
 newdata <- current_target
-colnames(current_target) <- short_name
 all_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData", description = "allData", "allData", 10, 250, strata_Percent_var, "ROC", current_target, "All_Data_Test",43, "NA", "NA")
 all_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_prosp", description = "allData_prosp", "allData_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "All_Data_Test_prosp",43, "NA", "NA")
 all_means <- apply(all_ROC_data[[1]], MARGIN = 2, FUN = mean)
@@ -260,7 +283,6 @@ all_data_balance <- all_data %>%
 group_by(status) %>%
 sample_n(size = 300)
 current_all <- all_data_balance
-colnames(current_all) <- short_name
 current_tab <- table(all_data_balance$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",43, "NA", "NA")
 all_bal_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance_prosp", description = "allData_balance_prosp", "allData_balance_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "allData_balance_Test_prosp",43, "NA", "NA")
@@ -281,6 +303,8 @@ Dl_chip <- subset(all_data, all_data$Dorsal_2009_chip > (min(all_data$Dorsal_200
 Dl_chip_balance <- Dl_chip %>%
 group_by(status) %>%
 sample_n(size = 300)
+Dl_chip$status <- factor(Dl_chip$status)
+row.names(Dl_chip) <- NULL
 
 #unbalanced
 current_all <- Dl_chip 
@@ -288,6 +312,7 @@ colnames(current_all) <- long_name
 colnames(current_target) <- long_name
 colnames(prosp_target) <- long_name
 current_tab <- table(current_all$status)
+
 Dlchip_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Dl_chip", description = "Dl_chip", "Dl_chip", 10, 250, strata_Percent_var, "ROC", current_target, "Dl_chip_Test",43, "NA", "NA")
 Dlchip_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Dl_chip_prosp", description = "Dl_chip_prosp", "Dl_chip_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Dl_chip_Test_prosp",43, "NA", "NA")
 Dlchip_means <- apply(Dlchip_ROC_data[[1]], MARGIN = 2, FUN = mean)
@@ -318,6 +343,8 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 
 #Random forest predictions based on all data, using reporters bound by Dorsal chip-chip AND Twist chip-chip
 Dl_Twi <- subset(Dl_chip, Dl_chip$Twist_2009_chip > (min(Dl_chip$Twist_2009_chip)))
+Dl_Twi$status <- factor(Dl_Twi$status)
+row.names(Dl_Twi) <- NULL
 Dl_Twi_chip_balance <- Dl_Twi %>%
 group_by(status) %>%
 sample_n(size = 300)
@@ -419,7 +446,7 @@ current_all <- FTwi_train_all
 current_tab <- table(current_all$status)
 Twi14_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "FTwi14_train_all", description = "FTwi14_train_all", "FTwi14_train_all", 10, 250, strata_Percent_var, "ROC", current_target, "FTwi14_train_all_Test",43, "NA", "NA")
 Twi14_all_means <- apply(Twi14_ROC_data[[1]], MARGIN = 2, FUN = mean)
-Twi14_all_sd <- apply(Twi14_ROC_data[[1]], MARGIN=2, FUN=sd
+Twi14_all_sd <- apply(Twi14_ROC_data[[1]], MARGIN=2, FUN=sd)
 Twi14_all_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Twi14_all_prosp", description = "Twi14_all_prosp", "Twi14_all_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Twi14_all_prosp",43, "NA", "NA")
 all_imp <- data.frame(Twi14_ROC_data[2])
 all_mean <- rowMeans(all_imp)
@@ -471,6 +498,232 @@ alldata <- all_temp[order(all_mean),]
 dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
 segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 
+current_all <- Bcd13_train_all
+current_tab <- table(current_all$status)
+Bcd13_all_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Bcd13_train_all", description = "Bcd13_train_all", "Bcd13_train_all", 10, 250, strata_Percent_var, "ROC", current_target, "Bcd13_train_all_Test",43, "NA", "NA")
+Bcd13_all_means <- apply(Bcd13_all_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Bcd13_all_sd <- apply(Bcd13_all_ROC_data[[1]], MARGIN=2, FUN=sd)
+Bcd13_all_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Bcd13_all_prosp", description = "Bcd13_all_prosp", "Bcd13_all_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Bcd13_all_prosp",43, "NA", "NA")
+all_imp <- data.frame(Bcd13_all_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+current_all <- Bcd13_train_cons
+current_tab <- table(current_all$status)
+Bcd13_cons_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Bcd13_train_cons", description = "Bcd13_train_cons", "Bcd13_train_cons", 10, 250, strata_Percent_var, "ROC", current_target, "Bcd13_train_cons_Test",43, "NA", "NA")
+Bcd13_cons_means <- apply(Bcd13_cons_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Bcd13_cons_sd <- apply(Bcd13_cons_ROC_data[[1]], MARGIN=2, FUN=sd)
+Bcd13_cons_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Bcd13_cons_prosp", description = "Bcd13_cons_prosp", "Bcd13_cons_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Bcd13_cons_prosp",43, "NA", "NA")
+all_imp <- data.frame(Bcd13_cons_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+
+current_all <- Bcd09_train_all
+current_tab <- table(current_all$status)
+Bcd09_all_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Bcd09_train_all", description = "Bcd09_train_all", "Bcd09_train_all", 10, 250, strata_Percent_var, "ROC", current_target, "Bcd09_train_all_Test",43, "NA", "NA")
+Bcd09_all_means <- apply(Bcd09_all_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Bcd09_all_sd <- apply(Bcd09_all_ROC_data[[1]], MARGIN=2, FUN=sd)
+Bcd09_all_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Bcd09_all_prosp", description = "Bcd09_all_prosp", "Bcd09_all_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Bcd09_all_prosp",43, "NA", "NA")
+all_imp <- data.frame(Bcd09_all_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+current_all <- Bcd09_train_cons
+current_tab <- table(current_all$status)
+Bcd09_cons_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Bcd09_train_cons", description = "Bcd09_train_cons", "Bcd09_train_cons", 10, 250, strata_Percent_var, "ROC", current_target, "Bcd09_train_cons_Test",43, "NA", "NA")
+Bcd09_cons_means <- apply(Bcd09_cons_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Bcd09_cons_sd <- apply(Bcd09_cons_ROC_data[[1]], MARGIN=2, FUN=sd)
+Bcd09_cons_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Bcd09_cons_prosp", description = "Bcd09_cons_prosp", "Bcd09_cons_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Bcd09_cons_prosp",43, "NA", "NA")
+all_imp <- data.frame(Bcd09_cons_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+current_all <- Cad09_train_all
+current_tab <- table(current_all$status)
+Cad09_all_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Cad09_train_all", description = "Cad09_train_all", "Cad09_train_all", 10, 250, strata_Percent_var, "ROC", current_target, "Cad09_train_all_Test",43, "NA", "NA")
+Cad09_all_means <- apply(Cad09_all_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Cad09_all_sd <- apply(Cad09_all_ROC_data[[1]], MARGIN=2, FUN=sd)
+Cad09_all_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Cad09_all_prosp", description = "Cad09_all_prosp", "Cad09_all_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Cad09_all_prosp",43, "NA", "NA")
+all_imp <- data.frame(Cad09_all_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+current_all <- Cad09_train_cons
+current_tab <- table(current_all$status)
+Cad09_cons_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Cad09_train_cons", description = "Cad09_train_cons", "Cad09_train_cons", 10, 250, strata_Percent_var, "ROC", current_target, "Cad09_train_cons_Test",43, "NA", "NA")
+Cad09_cons_means <- apply(Cad09_cons_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Cad09_cons_sd <- apply(Cad09_cons_ROC_data[[1]], MARGIN=2, FUN=sd)
+Cad09_cons_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Cad09_cons_prosp", description = "Cad09_cons_prosp", "Cad09_cons_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Cad09_cons_prosp",43, "NA", "NA")
+all_imp <- data.frame(Cad09_cons_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+current_all <- Gt13_train_all
+current_tab <- table(current_all$status)
+Gt13_all_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Gt13_train_all", description = "Gt13_train_all", "Gt13_train_all", 10, 250, strata_Percent_var, "ROC", current_target, "Gt13_train_all_Test",43, "NA", "NA")
+Gt13_all_means <- apply(Gt13_all_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Gt13_all_sd <- apply(Gt13_all_ROC_data[[1]], MARGIN=2, FUN=sd)
+Gt13_all_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Gt13_all_prosp", description = "Gt13_all_prosp", "Gt13_all_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Gt13_all_prosp",43, "NA", "NA")
+all_imp <- data.frame(Gt13_all_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+current_all <- Gt13_train_cons
+current_tab <- table(current_all$status)
+Gt13_cons_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Gt13_train_cons", description = "Gt13_train_cons", "Gt13_train_cons", 10, 250, strata_Percent_var, "ROC", current_target, "Gt13_train_cons_Test",43, "NA", "NA")
+Gt13_cons_means <- apply(Gt13_cons_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Gt13_cons_sd <- apply(Gt13_cons_ROC_data[[1]], MARGIN=2, FUN=sd)
+Gt13_cons_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Gt13_cons_prosp", description = "Gt13_cons_prosp", "Gt13_cons_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Gt13_cons_prosp",43, "NA", "NA")
+all_imp <- data.frame(Gt13_cons_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+current_all <- Gt09_train_all
+current_tab <- table(current_all$status)
+Gt09_all_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Gt09_train_all", description = "Gt09_train_all", "Gt09_train_all", 10, 250, strata_Percent_var, "ROC", current_target, "Gt09_train_all_Test",43, "NA", "NA")
+Gt09_all_means <- apply(Gt09_all_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Gt09_all_sd <- apply(Gt09_all_ROC_data[[1]], MARGIN=2, FUN=sd)
+Gt09_all_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Gt09_all_prosp", description = "Gt09_all_prosp", "Gt09_all_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Gt09_all_prosp",43, "NA", "NA")
+all_imp <- data.frame(Gt09_all_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+current_all <- Gt09_train_cons
+current_tab <- table(current_all$status)
+Gt09_cons_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Gt09_train_cons", description = "Gt09_train_cons", "Gt09_train_cons", 10, 250, strata_Percent_var, "ROC", current_target, "Gt09_train_cons_Test",43, "NA", "NA")
+Gt09_cons_means <- apply(Gt09_cons_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Gt09_cons_sd <- apply(Gt09_cons_ROC_data[[1]], MARGIN=2, FUN=sd)
+Gt09_cons_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Gt09_cons_prosp", description = "Gt09_cons_prosp", "Gt09_cons_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Gt09_cons_prosp",43, "NA", "NA")
+all_imp <- data.frame(Gt09_cons_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+current_all <- Kr13_train_all
+current_tab <- table(current_all$status)
+Kr13_all_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Kr13_train_all", description = "Kr13_train_all", "Kr13_train_all", 10, 250, strata_Percent_var, "ROC", current_target, "Kr13_train_all_Test",43, "NA", "NA")
+Kr13_all_means <- apply(Kr13_all_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Kr13_all_sd <- apply(Kr13_all_ROC_data[[1]], MARGIN=2, FUN=sd)
+Kr13_all_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Kr13_all_prosp", description = "Kr13_all_prosp", "Kr13_all_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Kr13_all_prosp",43, "NA", "NA")
+all_imp <- data.frame(Kr13_all_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+current_all <- Kr13_train_cons
+current_tab <- table(current_all$status)
+Kr13_cons_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Kr13_train_cons", description = "Kr13_train_cons", "Kr13_train_cons", 10, 250, strata_Percent_var, "ROC", current_target, "Kr13_train_cons_Test",43, "NA", "NA")
+Kr13_cons_means <- apply(Kr13_cons_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Kr13_cons_sd <- apply(Kr13_cons_ROC_data[[1]], MARGIN=2, FUN=sd)
+Kr13_cons_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Kr13_cons_prosp", description = "Kr13_cons_prosp", "Kr13_cons_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Kr13_cons_prosp",43, "NA", "NA")
+all_imp <- data.frame(Kr13_cons_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+current_all <- Kni10_train_all
+current_tab <- table(current_all$status)
+Kni10_all_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Kni10_train_all", description = "Kni10_train_all", "Kni10_train_all", 10, 250, strata_Percent_var, "ROC", current_target, "Kni10_train_all_Test",43, "NA", "NA")
+Kni10_all_means <- apply(Kni10_all_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Kni10_all_sd <- apply(Kni10_all_ROC_data[[1]], MARGIN=2, FUN=sd)
+Kni10_all_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Kni10_all_prosp", description = "Kni10_all_prosp", "Kni10_all_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Kni10_all_prosp",43, "NA", "NA")
+all_imp <- data.frame(Kni10_all_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+current_all <- Kni10_train_cons
+current_tab <- table(current_all$status)
+Kni10_cons_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Kni10_train_cons", description = "Kni10_train_cons", "Kni10_train_cons", 10, 250, strata_Percent_var, "ROC", current_target, "Kni10_train_cons_Test",43, "NA", "NA")
+Kni10_cons_means <- apply(Kni10_cons_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Kni10_cons_sd <- apply(Kni10_cons_ROC_data[[1]], MARGIN=2, FUN=sd)
+Kni10_cons_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Kni10_cons_prosp", description = "Kni10_cons_prosp", "Kni10_cons_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Kni10_cons_prosp",43, "NA", "NA")
+all_imp <- data.frame(Kni10_cons_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+current_all <- Hry09_train_all
+current_tab <- table(current_all$status)
+Hry09_all_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Hry09_train_all", description = "Hry09_train_all", "Hry09_train_all", 10, 250, strata_Percent_var, "ROC", current_target, "Hry09_train_all_Test",43, "NA", "NA")
+Hry09_all_means <- apply(Hry09_all_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Hry09_all_sd <- apply(Hry09_all_ROC_data[[1]], MARGIN=2, FUN=sd)
+Hry09_all_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Hry09_all_prosp", description = "Hry09_all_prosp", "Hry09_all_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Hry09_all_prosp",43, "NA", "NA")
+all_imp <- data.frame(Hry09_all_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+current_all <- Hry09_train_cons
+current_tab <- table(current_all$status)
+Hry09_cons_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Hry09_train_cons", description = "Hry09_train_cons", "Hry09_train_cons", 10, 250, strata_Percent_var, "ROC", current_target, "Hry09_train_cons_Test",43, "NA", "NA")
+Hry09_cons_means <- apply(Hry09_cons_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Hry09_cons_sd <- apply(Hry09_cons_ROC_data[[1]], MARGIN=2, FUN=sd)
+Hry09_cons_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Hry09_cons_prosp", description = "Hry09_cons_prosp", "Hry09_cons_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Hry09_cons_prosp",43, "NA", "NA")
+all_imp <- data.frame(Hry09_cons_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+
 
 current_all <- random_data
 current_tab <- table(current_all$status)
@@ -486,7 +739,9 @@ alldata <- all_temp[order(all_mean),]
 dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
 segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 
-all_mean_random <- Random_means
+
+
+all_mean_random <- Random_bcd_means
 
 current_all <- random_balance
 current_tab <- table(current_all$status)
@@ -502,12 +757,22 @@ alldata <- all_temp[order(all_mean),]
 dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
 segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 
-#Figure 8
+current_all <- random_bcd
+current_tab <- table(current_all$status)
+Random_bcd_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "random_balance", description = "random_balance", "random_balance", 10, 250, strata_Percent_var, "ROC", current_target, "random_balance_Test",43, "NA", "NA")
+Random_bcd_means <- apply(Random_bcd_ROC_data[[1]], MARGIN = 2, FUN = mean)
+Random_bcd_sd <- apply(Random_bcd_ROC_data[[1]], MARGIN=2, FUN=sd)
+Random_bcd_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Random_bal_prosp", description = "Random_bal_prosp", "Random_bal_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "Random_bal_prosp",43, "NA", "NA")
+all_imp <- data.frame(Random_bcd_ROC_data[2])
+all_mean <- rowMeans(all_imp)
+all_sd_imp <- rowSds(as.matrix(all_imp))
+all_temp <- cbind(all_mean, all_sd_imp)
+alldata <- all_temp[order(all_mean),]
+dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
+segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 
-unbal <- c(all_means[1]/100,all_means[6] + 1,all_means[7] + 2, Dlchip_means[1]/100,Dlchip_means[6] + 1,Dlchip_means[7] + 2, 
-          DlTwi_means[1]/100, DlTwi_means[6] + 1, DlTwi_means[7] + 2, Dl15_all_means[1]/100, Dl15_all_means[6] + 1,Dl15_all_means[7] + 2 , 
-          Twi14_all_means[1]/100,Twi14_all_means[6] + 1, Twi14_all_means[7] + 2 ,Zld_all_means[1]/100, Zld_all_means[6] +1, Zld_all_means[7] + 2, 
-          H3K4me1_all_means[1]/100, H3K4me1_all_means[6] + 1, H3K4me1_all_means[7] + 2 , Random_means[1]/100, Random_means[6] + 1, Random_means[7] + 2)
+#Figure 7
+
 
 all_models <- c( Random_means[1]/100, Random_means[6]   + 1, Random_means[7]   + 2, Random_bal_means[1]/100, Random_bal_means[6]   + 1, Random_bal_means[7]   + 2,
           all_means[1]/100,all_means[6]   + 1,all_means[7]   + 2, all_bal_means[1]/100,all_bal_means[6]   + 1,all_bal_means[7]   + 2, 
@@ -515,8 +780,9 @@ all_models <- c( Random_means[1]/100, Random_means[6]   + 1, Random_means[7]   +
           DlTwi_means[1]/100, DlTwi_means[6]   + 1, DlTwi_means[7]   + 2, DlTwi_bal_means[1]/100, DlTwi_bal_means[6]   + 1, DlTwi_bal_means[7]   + 2, 
           Twi14_all_means[1]/100,Twi14_all_means[6]   + 1, Twi14_all_means[7]   + 2 ,Twi14_cons_means[1]/100,Twi14_cons_means[6]   + 1, Twi14_cons_means[7]   + 2 ,
 		  Zld_all_means[1]/100, Zld_all_means[6] +1, Zld_all_means[7]   + 2, Zld_cons_means[1]/100, Zld_cons_means[6] +1, Zld_cons_means[7]   + 2,
-          H3K4me1_all_means[1]/100, H3K4me1_all_means[6]   + 1, H3K4me1_all_means[7]   + 2 , H3K4me1_cons_means[1]/100, H3K4me1_cons_means[6]   + 1, H3K4me1_cons_means[7]   + 2,
-		  Dl15_all_means[1]/100, Dl15_all_means[6]   + 1,Dl15_all_means[7]   + 2 , Dl15_cons_means[1]/100, Dl15_cons_means[6]   + 1,Dl15_cons_means[7]   + 2 )
+		  H3K4me1_all_means[1]/100, H3K4me1_all_means[6] + 1 , H3K4me1_all_means[7] +2 , H3K4me1_cons_means[1]/100, H3K4me1_cons_means[6] + 1 , H3K4me1_cons_means[7] +2 , 
+		  Bcd13_all_means[1]/100,Bcd13_all_means[6]   + 1,Bcd13_all_means[7]   + 2, Bcd13_cons_means[1]/100,Bcd13_cons_means[6]   + 1,Bcd13_cons_means[7]   + 2,
+		  )
 
 xnames <- c(1,1,1,3,3,3,7,7,7,9,9,9,13,13,13,15,15,15,19,19,19,21,21,21,25,25,25,27,27,27,31,31,31,33,33,33,37,37,37,39,39,39,43,43,43,45,45,45)
 plot(xnames, all_models, xaxt = "none", pch = 19, col = c("black","black", "black","cyan4","cyan4","cyan4"), ylim = c(0.1, 2.9),xlim = c(1,45),yaxt = "none", xlab = "")
@@ -533,9 +799,55 @@ abline(v=29,col="darkgray",lty=3)
 abline(v=35,col="darkgray",lty=3)
 abline(v=41,col="darkgray",lty=3)
 
-lab = c("random", "all_data", "Dl_2009", "Dl_Twi_2009", "Twi_2014", "Zld_2011", "H3K4me1_2015", "Dl_2015")
+lab = c("random", "all_data", "Dl_09_c", "Dl_Twi_09_c", "Twi_14_c", "Zld_11_s","H3K4me1_15", "Bcd_13_s")
 
 text(x=c(2,8,14,20,26,32,38,44), y=par()$usr[3] - 0.01*(par()$usr[4]-par()$usr[3]),labels = lab,srt=45, adj=1, xpd=TRUE)
+
+all_models_sd <- c( Random_sd[1]/100, Random_sd[6]   + 1, Random_sd[7]   + 2, Random_bal_sd[1]/100, Random_bal_sd[6]   + 1, Random_bal_sd[7]   + 2,
+          all_sd[1]/100,all_sd[6]   + 1,all_sd[7]   + 2, all_bal_sd[1]/100,all_bal_sd[6]   + 1,all_bal_sd[7]   + 2, 
+		  Dlchip_sd[1]/100,Dlchip_sd[6]   + 1,Dlchip_sd[7]   + 2, Dlchip_bal_sd[1]/100,Dlchip_bal_sd[6]   + 1,Dlchip_bal_sd[7]   + 2,
+          DlTwi_sd[1]/100, DlTwi_sd[6]   + 1, DlTwi_sd[7]   + 2, DlTwi_bal_sd[1]/100, DlTwi_bal_sd[6]   + 1, DlTwi_bal_sd[7]   + 2, 
+          Twi14_all_sd[1]/100,Twi14_all_sd[6]   + 1, Twi14_all_sd[7]   + 2 ,Twi14_cons_sd[1]/100,Twi14_cons_sd[6]   + 1, Twi14_cons_sd[7]   + 2 ,
+		  Zld_all_sd[1]/100, Zld_all_sd[6] +1, Zld_all_sd[7]   + 2, Zld_cons_sd[1]/100, Zld_cons_sd[6] +1, Zld_cons_sd[7]   + 2,
+		  H3K4me1_all_sd[1]/100, H3K4me1_all_sd[6] , H3K4me1_all_sd[7]  , H3K4me1_cons_sd[1]/100, H3K4me1_cons_sd[6] , H3K4me1_cons_sd[7]  , 
+		  Bcd13_all_sd[1]/100,Bcd13_all_sd[6]   + 1,Bcd13_all_sd[7]   + 2, Bcd13_cons_sd[1]/100,Bcd13_cons_sd[6]   + 1,Bcd13_cons_sd[7]   + 2,
+		  )
+
+
+#Supplementary figure 7	
+
+
+supplementary_models <- c( Random_means[1]/100, Random_means[6]   + 1, Random_means[7]   + 2, Random_bal_means[1]/100, Random_bal_means[6]   + 1, Random_bal_means[7]   + 2,
+          all_means[1]/100,all_means[6]   + 1,all_means[7]   + 2, all_bal_means[1]/100,all_bal_means[6]   + 1,all_bal_means[7]   + 2, 
+		  Dl15_all_means[1]/100, Dl15_all_means[6]   + 1,Dl15_all_means[7]   + 2 , Dl15_cons_means[1]/100, Dl15_cons_means[6]   + 1,Dl15_cons_means[7]   + 2,   
+		  Bcd09_all_means[1]/100, Bcd09_all_means[6]   + 1, Bcd09_all_means[7]   + 2, Bcd09_cons_means[1]/100, Bcd09_cons_means[6]   + 1, Bcd09_cons_means[7]   + 2, 
+          Cad09_all_means[1]/100,Cad09_all_means[6]   + 1, Cad09_all_means[7]   + 2 ,Cad09_cons_means[1]/100,Cad09_cons_means[6]   + 1, Cad09_cons_means[7]   + 2 ,
+		  Gt13_all_means[1]/100, Gt13_all_means[6] +1, Gt13_all_means[7]   + 2, Gt13_cons_means[1]/100, Gt13_cons_means[6] +1, Gt13_cons_means[7]   + 2,
+          Gt09_all_means[1]/100, Gt09_all_means[6]   + 1, Gt09_all_means[7]   + 2 , Gt09_cons_means[1]/100, Gt09_cons_means[6]   + 1, Gt09_cons_means[7]   + 2,
+		  Kr13_all_means[1]/100, Kr13_all_means[6]   + 1, Kr13_all_means[7]   + 2 , Kr13_cons_means[1]/100, Kr13_cons_means[6]   + 1, Kr13_cons_means[7]   + 2,
+		  Hry09_all_means[1]/100, Hry09_all_means[6]   + 1,Hry09_all_means[7]   + 2 , Hry09_cons_means[1]/100, Hry09_cons_means[6]   + 1,Hry09_cons_means[7]   + 2 )
+
+xnames2 <- c(1,1,1,3,3,3,7,7,7,9,9,9,13,13,13,15,15,15,19,19,19,21,21,21,25,25,25,27,27,27,31,31,31,33,33,33,37,37,37,39,39,39,43,43,43,45,45,45,49,49,49,51,51,51)
+plot(xnames2, supplementary_models, xaxt = "none", pch = 19, col = c("black","black", "black","cyan4","cyan4","cyan4"), ylim = c(0.1, 2.9),xlim = c(1,51),yaxt = "none", xlab = "")
+abline(h=1,col=1,lty=1)
+abline(h=2,col=1,lty=1)
+abline(h=0.5,col="gray",lty=2)
+abline(h=1.5,col="gray",lty=2)
+abline(h=2.5,col="gray",lty=2)
+abline(v=5,col="darkgray",lty=3)
+abline(v=11,col="darkgray",lty=3)
+abline(v=17,col="darkgray",lty=3)
+abline(v=23,col="darkgray",lty=3)
+abline(v=29,col="darkgray",lty=3)
+abline(v=35,col="darkgray",lty=3)
+abline(v=41,col="darkgray",lty=3)
+abline(v=47,col="darkgray",lty=3)
+
+
+
+lab = c("random", "all_data", "D1_15_s", "Bcd_09_c", "Cad_09_c", "Gt_13_s", "Gt_09_c", "Kr_13_s", "Hry_09_c")
+
+text(x=c(2,8,14,20,26,32,38,44,50), y=par()$usr[3] - 0.01*(par()$usr[4]-par()$usr[3]),labels = lab,srt=45, adj=1, xpd=TRUE)
 
 all_models_sd <- c(all_sd[1]/100,all_sd[6] ,all_sd[7] , all_bal_sd[1]/100,all_bal_sd[6] ,all_bal_sd[7] , 
           Dlchip_sd[1]/100,Dlchip_sd[6] ,Dlchip_sd[7] , Dlchip_bal_sd[1]/100,Dlchip_bal_sd[6] ,Dlchip_bal_sd[7] ,
@@ -545,9 +857,10 @@ all_models_sd <- c(all_sd[1]/100,all_sd[6] ,all_sd[7] , all_bal_sd[1]/100,all_ba
 		  Zld_all_sd[1]/100, Zld_all_sd[6], Zld_all_sd[7] , Zld_cons_sd[1]/100, Zld_cons_sd[6], Zld_cons_sd[7] ,
           H3K4me1_all_sd[1]/100, H3K4me1_all_sd[6] , H3K4me1_all_sd[7]  , H3K4me1_cons_sd[1]/100, H3K4me1_cons_sd[6] , H3K4me1_cons_sd[7]  , 
 		  Random_sd[1]/100, Random_sd[6] , Random_sd[7] , Random_bal_sd[1]/100, Random_bal_sd[6] , Random_bal_sd[7] )
-		  
+
+#figure 8-- some of the text here needs to be updated  
 	
-current_all <- Dl_Twi 
+current_all <- Bcd13_train_all
 current_tab <- table(current_all$status)
 DlTwi_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Dl_Twi ", description = "Dl_Twi ", "Dl_Twi", 10, 250, strata_Percent_var, "ROC", current_target, "Dl_Twi_Test",43, "NA", "NA")
 DlTwi_means <- apply(DlTwi_ROC_data[[1]], MARGIN = 2, FUN = mean)
@@ -580,7 +893,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop1 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Snail_2014_chip <- NULL
+current_all_drop$Bicoid_2013_seq <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",41, "NA", "NA")
@@ -598,7 +911,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop2 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Giant_2009_chip <- NULL
+current_all_drop$Bicoid_2009_chip <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",40, "NA", "NA")
@@ -616,7 +929,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop3 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Bicoid_2013_seq <- NULL
+current_all_drop$Giant_2013_seq <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",39, "NA", "NA")
@@ -634,7 +947,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop4 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Kruppel_2013_seq <- NULL
+current_all_drop$Snail_2014_chip <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",38, "NA", "NA")
@@ -653,7 +966,7 @@ all_mean_drop5 <- all_bal_means
 
 
 current_all_drop <- current_all
-current_all_drop$Bicoid_2009_chip <- NULL
+current_all_drop$Kruppel_2013_seq <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",37, "NA", "NA")
@@ -672,7 +985,7 @@ all_mean_drop6 <- all_bal_means
 
 
 current_all_drop <- current_all
-current_all_drop$Twist_2014_chip <- NULL
+current_all_drop$Giant_2009_chip <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",36, "NA", "NA")
@@ -690,7 +1003,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop7 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Twist_2011_seq <- NULL
+current_all_drop$Zld_motif_sanger <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",35, "NA", "NA")
@@ -708,7 +1021,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop8 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Hairy_2009_chip <- NULL
+current_all_drop$Twist_2014_chip <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",34, "NA", "NA")
@@ -726,7 +1039,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop9 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Hunchback_2009_chip <- NULL
+current_all_drop$Twist_2009_chip <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",33, "NA", "NA")
@@ -744,7 +1057,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop10 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Knirps_2010_seq <- NULL
+current_all_drop$Twist_2011_seq <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",32, "NA", "NA")
@@ -762,7 +1075,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop11 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Caudal_2010_seq <- NULL
+current_all_drop$Dorsal_2009_chip <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",31, "NA", "NA")
@@ -780,7 +1093,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop12 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Twist_2009_chip <- NULL
+current_all_drop$Hunchback_2013_seq <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",30, "NA", "NA")
@@ -798,7 +1111,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop13 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Caudal_2009_chip <- NULL
+current_all_drop$Hunchback_2009_chip <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",29, "NA", "NA")
@@ -816,7 +1129,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop14 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$p300_2010_seq <- NULL
+current_all_drop$Caudal_2010_seq <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",28, "NA", "NA")
@@ -835,7 +1148,7 @@ all_mean_drop15 <- all_bal_means
 
 
 current_all_drop <- current_all
-current_all_drop$Giant_2013_seq <- NULL
+current_all_drop$Snail_2009_chip <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",27, "NA", "NA")
@@ -853,7 +1166,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop16 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Hunchback_2013_seq <- NULL
+current_all_drop$Hairy_2009_chip <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",26, "NA", "NA")
@@ -871,7 +1184,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop17 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Dorsal_2015_seq <- NULL
+current_all_drop$Knirps_2010_seq <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",25, "NA", "NA")
@@ -890,7 +1203,7 @@ all_mean_drop18 <- all_bal_means
 
 
 current_all_drop <- current_all
-current_all_drop$Zld_motif_sanger <- NULL
+current_all_drop$Zld_motif_solexa <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",24, "NA", "NA")
@@ -908,7 +1221,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop19 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Snail_2009_chip <- NULL
+current_all_drop$p300_2010_seq <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",23, "NA", "NA")
@@ -926,7 +1239,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop20 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Zld_motif_solexa <- NULL
+current_all_drop$Caudal_2009_chip <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",22, "NA", "NA")
@@ -944,7 +1257,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop21 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Dere <- NULL
+current_all_drop$Dorsal_2015_seq <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",21, "NA", "NA")
@@ -962,7 +1275,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop22 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Dsim <- NULL
+current_all_drop$H3K4me1_2015_seq <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",20, "NA", "NA")
@@ -980,7 +1293,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop23 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Dyak <- NULL
+current_all_drop$H3K27ac_2010_seq <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",19, "NA", "NA")
@@ -998,7 +1311,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop24 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Dorsal_2009_chip <- NULL
+current_all_drop$Dvir <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",18, "NA", "NA")
@@ -1016,7 +1329,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop24_5 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Dana <- NULL
+current_all_drop$H3K27ac_2015_seq <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",17, "NA", "NA")
@@ -1034,7 +1347,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop25 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$H3K4me1_2015_seq <- NULL
+current_all_drop$Dwil <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",16, "NA", "NA")
@@ -1052,7 +1365,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop26 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Dana <- NULL
+current_all_drop$Dsim <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",15, "NA", "NA")
@@ -1070,7 +1383,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop27 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Dpse <- NULL
+current_all_drop$Dsec <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",14, "NA", "NA")
@@ -1088,7 +1401,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop28 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$H3K27ac_2015_seq <- NULL
+current_all_drop$Dere <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",13, "NA", "NA")
@@ -1106,7 +1419,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop29 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Snail_motif_FlyReg <- NULL
+current_all_drop$Dgri <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",12, "NA", "NA")
@@ -1124,7 +1437,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop30 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Dorsal_motif_NBT <- NULL
+current_all_drop$Dpse <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",11, "NA", "NA")
@@ -1142,7 +1455,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop31 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Dsec <- NULL
+current_all_drop$Snail_motif_solexa <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",10, "NA", "NA")
@@ -1160,7 +1473,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop32 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Dorsal_motif_FlyReg <- NULL
+current_all_drop$Dyak <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",9, "NA", "NA")
@@ -1178,7 +1491,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop33 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Twist_motif_da <- NULL
+current_all_drop$Dorsal_motif_FlyReg <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",8, "NA", "NA")
@@ -1197,7 +1510,7 @@ all_mean_drop34 <- all_bal_means
 
 
 current_all_drop <- current_all
-current_all_drop$Snail_motif_Sanger <- NULL
+current_all_drop$Dana <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",7, "NA", "NA")
@@ -1215,7 +1528,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop35 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Dgri <- NULL
+current_all_drop$Snail_motif_Sanger <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",6, "NA", "NA")
@@ -1233,7 +1546,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop36 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Snail_motif_solexa <- NULL
+current_all_drop$Twist_motif_FlyReg <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",5, "NA", "NA")
@@ -1251,7 +1564,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop37 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$H3K27ac_2010_seq <- NULL
+current_all_drop$Dorsal_motif_NBT <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",4, "NA", "NA")
@@ -1269,7 +1582,7 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 all_mean_drop38 <- all_bal_means
 
 current_all_drop <- current_all
-current_all_drop$Twist_motif_FlyReg <- NULL
+current_all_drop$Snail_motif_FlyReg <- NULL
 current_all <- current_all_drop
 current_tab <- table(current_all$status)
 all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",3, "NA", "NA")
@@ -1286,43 +1599,12 @@ segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 
 all_mean_drop39 <- all_bal_means
 
-current_all_drop <- current_all
-current_all_drop$Dvir <- NULL
-current_all <- current_all_drop
-current_tab <- table(current_all$status)
-all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_Percent_var, "ROC", current_target, "allData_balance_Test",2, "NA", "NA")
-
-all_bal_means <- apply(all_bal_ROC_data[[1]], MARGIN = 2, FUN = mean)
-all_bal_sd <- apply(all_bal_ROC_data[[1]], MARGIN=2, FUN=sd)
-all_imp <- data.frame(all_bal_ROC_data[2])
-all_mean <- rowMeans(all_imp)
-all_sd_imp <- rowSds(as.matrix(all_imp))
-all_temp <- cbind(all_mean, all_sd_imp)
-alldata <- all_temp[order(all_mean),]
-dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
-segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
-
-all_mean_drop40 <- all_bal_means
-#top performing unbalanced model
 
 
-current_all <- random_data
-current_tab <- table(current_all$status)
-Random_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "random_data", description = "random_data", "random_data", 10, 250, strata_Percent_var, "ROC", current_target, "random_data_Test",43, "NA", "NA")
-Random_means <- apply(Random_ROC_data[[1]], MARGIN = 2, FUN = mean)
-Random_sd <- apply(Random_ROC_data[[1]], MARGIN=2, FUN=sd)
-all_imp <- data.frame(Random_ROC_data[2])
-all_mean <- rowMeans(all_imp)
-all_sd_imp <- rowSds(as.matrix(all_imp))
-all_temp <- cbind(all_mean, all_sd_imp)
-alldata <- all_temp[order(all_mean),]
-dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
-segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 
-all_mean_random <- Random_means
+all_mean_random <- Random_bcd_means
 
-
-Dl_Twi_unbalanced <- c(DlTwi_means[1]/100,DlTwi_means[6]   + 1,DlTwi_means[7]   + 2, all_mean_drop1[1]/100,all_mean_drop1[6]   + 1,all_mean_drop1[7]   + 2,
+Bcd_13_unbalanced <- c(Bcd13_all_means[1]/100,Bcd13_all_means[6]   + 1,Bcd13_all_means[7]   + 2, all_mean_drop1[1]/100,all_mean_drop1[6]   + 1,all_mean_drop1[7]   + 2,
 		   all_mean_drop2[1]/100,all_mean_drop2[6]   + 1,all_mean_drop2[7]   + 2,all_mean_drop3[1]/100,all_mean_drop3[6]   + 1,all_mean_drop3[7]   + 2,
 		   all_mean_drop4[1]/100,all_mean_drop4[6]   + 1,all_mean_drop4[7]   + 2,all_mean_drop5[1]/100,all_mean_drop5[6]   + 1,all_mean_drop5[7]   + 2,
 		   all_mean_drop6[1]/100,all_mean_drop6[6]   + 1,all_mean_drop6[7]   + 2,all_mean_drop7[1]/100,all_mean_drop7[6]   + 1,all_mean_drop7[7]   + 2,
@@ -1343,11 +1625,11 @@ Dl_Twi_unbalanced <- c(DlTwi_means[1]/100,DlTwi_means[6]   + 1,DlTwi_means[7]   
 		   all_mean_drop35[1]/100,all_mean_drop35[6]   + 1,all_mean_drop35[7]   + 2,all_mean_drop36[1]/100,all_mean_drop36[6]   + 1,all_mean_drop36[7]   + 2,
 		   all_mean_drop37[1]/100,all_mean_drop37[6]   + 1,all_mean_drop37[7]   + 2,all_mean_drop38[1]/100,all_mean_drop38[6]   + 1,all_mean_drop38[7]   + 2,
 		   all_mean_drop39[1]/100,all_mean_drop39[6]   + 1,all_mean_drop39[7] +2,
-          all_mean_random[1]/100, all_mean_random[6]   + 1, all_mean_random[7]   + 2)
+          Random_bcd_means[1]/100, Random_bcd_means[6]   + 1, Random_bcd_means[7]   + 2)
 
 
 xnames <- c(1,1,1,3,3,3,5,5,5,7,7,7,9,9,9,11,11,11,13,13,13,15,15,15,17,17,17,19,19,19,21,21,21,23,23,23,25,25,25,27,27,27,29,29,29,31,31,31,33,33,33,35,35,35,37,37,37,39,39,39,41,41,41,43,43,43,45,45,45,47,47,47,49,49,49,51,51,51,53,53,53,55,55,55,57,57,57,59,59,59,61,61,61,63,63,63,65,65,65, 67,67,67,69,69,69,71,71,71,73,73,73,75,75,75,77,77,77,79,79,79,81,81,81,83,83,83)
-plot(xnames, Dl_Twi_unbalanced, xaxt = "none", col = "black", pch = 19, ylim = c(0.1, 2.9),yaxt = "none", xlab = "")
+plot(xnames, Bcd_13_unbalanced, xaxt = "none", col = "black", pch = 19, ylim = c(0.1, 2.9),yaxt = "none", xlab = "")
 abline(h=1,col=1,lty=1)
 abline(h=2,col=1,lty=1)
 abline(h=0.5,col="gray",lty=2)
@@ -1397,11 +1679,10 @@ abline(v=80,col="darkgray",lty=3)
 abline(v=82,col="darkgray",lty=3)
 abline(v=84,col="darkgray",lty=3)
 
-lab = c("all data", "Zelda_2011_seq", "Snail_2014_chip", "Giant_2009_chip", "Bicoid_2013_seq", "Kruppel_2013_seq", "Bicoid_2009_chip", "Twist_2014_chip", "Twist_2011_seq", "Hairy_2009_chip", "Hunchback_2009_chip", "Knirps_2010_seq", "Caudal_2010_seq", "Twist_2009_chip", "Caudal_2009_chip", "p300_2010_seq", "Giant_2013_seq", "Hunchback_2013_seq", "Dorsal_2015_seq", "Zld_motif_sanger", "Snail_2009_chip", "Zld_motif_solexa", "Dere", "Dsim", "Dyak", "Dorsal_2009_chip", "Dana", "H3K4me1_2015_seq", "Dsim", "Dpse", "H3K27ac_2015_seq", "Dorsal_motif_NBT", "Snail_motif_FlyReg", "Dsec", "Dorsal_motif_FlyReg","Twist_motif_da", "Snail_motif_Sanger", "Dgri", "Snail_motif_solexa", "H3K27ac_2010_seq","Twist_motif_FlyReg","random_data")
-text(x=c(1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,61,63,65,67,69,71,73,75,77,79,81,83), y=par()$usr[3] - 0.01*(par()$usr[4]-par()$usr[3]),labels = lab,srt=65, adj=1, xpd=TRUE, cex=0.6)
+#lab = c("all", "Bcd_13_s", "Zld_11_s", "Bcd_09_c", "Gt_09_c", "Gt_13_s", "Sna_14_c", "Kr_13_s", "Hb_09_c", "Hb_13_s", "Twi_11_s", "Cad_10_s", "Dl_09_c", "Twi_09_c", "Twi_14_c", "Hry_09_c", "Zld_m1", "Sna_09_c", "Zld_m2", "Kni_10_s", "P300_10", "Cad_09_c", "Dl_15_s", "H3K4me1_15", "H3K27ac_10", "H3K27ac_15", "Dvir", "Dwil", "Dsec", "Dyak", "Dsim", "Dgri", "Snail_m3", "Dana", "Dere","Dl_m1", "Dl_m2", "Sna_m1", "Twi_m2", "Sna_m2", "Twi_m1","random_data")
+#text(x=c(1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31,33,35,37,39,41,43,45,47,49,51,53,55,57,59,61,63,65,67,69,71,73,75,77,79,81,83), y=par()$usr[3] - 0.01*(par()$usr[4]-par()$usr[3]),labels = lab,srt=65, adj=1, xpd=TRUE, cex=0.6)
 
-
-current_all <- Dl_Twi 
+current_all <- Bcd_13_unbalanced
 current_tab <- table(current_all$status)
 DlTwi_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Dl_Twi ", description = "Dl_Twi ", "Dl_Twi", 10, 250, strata_Percent_var, "ROC", current_target, "Dl_Twi_Test",43, "NA", "NA")
 DlTwi_means <- apply(DlTwi_ROC_data[[1]], MARGIN = 2, FUN = mean)
