@@ -250,7 +250,7 @@ enhancer_class_status_scale <- function(dataset, datatable, filename = "temp", s
 
 
 #Random forest predictions based on all data, scaled
-#Figure 6, Supplementary figure 9
+#Figure , Supplementary figure 9
 #unbalanced
 
 current_all <- all_data

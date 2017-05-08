@@ -318,3 +318,69 @@ all_temp <- cbind(all_mean, all_sd_imp)
 alldata <- all_temp[order(all_mean),]
 dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
 segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
+
+screeplot(ir.pca, type = "l", main = "Scree plot PCA, 41 features")
+lines(H3K4.pca$sdev^2[1:10], type = "b", col = "cadetblue")
+
+all_data_lda <- lda(train$status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_2014_chip + Snail_2009_chip + Twist_2011_seq + Twist_2014_chip + Twist_2009_chip + Bicoid_2013_seq + Bicoid_2009_chip + Caudal_2010_seq + Caudal_2009_chip + Hunchback_2013_seq + Hunchback_2009_chip + Giant_2013_seq + Giant_2009_chip + Kruppel_2013_seq + Knirps_2010_seq + Hairy_2009_chip + H3K27ac_2015_seq + H3K27ac_2010_seq + H3K4me1_2015_seq + p300_2010_seq + Zld_motif_sanger + Zld_motif_solexa + Dorsal_motif_FlyReg + Dorsal_motif_NBT + Snail_motif_FlyReg + Snail_motif_Sanger + Snail_motif_solexa + Twist_motif_FlyReg + Twist_motif_da + Dsim + Dsec + Dyak + Dere + Dana + Dpse + Dwil + Dvir + Dgri, data = train,prior = rep(1, 2)/2, CV=TRUE)
+all.data.lda.values <- predict(all_data_lda, test)
+all.data.class <- predict(all_data_lda)$class
+plot(all.data.lda.values$x[,1], ylab=c("LDA Axis 1"), col = test$status, pch = 19)
+
+H3K4_data_lda <- lda(H3K4$status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_2014_chip + Snail_2009_chip + Twist_2011_seq + Twist_2014_chip + Twist_2009_chip + Bicoid_2013_seq + Bicoid_2009_chip + Caudal_2010_seq + Caudal_2009_chip + Hunchback_2013_seq + Hunchback_2009_chip + Giant_2013_seq + Giant_2009_chip + Kruppel_2013_seq + Knirps_2010_seq + Hairy_2009_chip + H3K27ac_2015_seq + H3K27ac_2010_seq + H3K4me1_2015_seq + p300_2010_seq + Zld_motif_sanger + Zld_motif_solexa + Dorsal_motif_FlyReg + Dorsal_motif_NBT + Snail_motif_FlyReg + Snail_motif_Sanger + Snail_motif_solexa + Twist_motif_FlyReg + Twist_motif_da + Dsim + Dsec + Dyak + Dere + Dana + Dpse + Dwil + Dvir + Dgri, data = H3K4,prior = rep(1, 2)/2, CV=TRUE)
+H3K4.data.lda.values <- predict(H3K4_data_lda, H3K4)
+H3K4.data.class <- predict(H3K4_data_lda)$class
+plot(H3K4.data.lda.values$x[,1], ylab=c("LDA Axis 1"), col = H3K4$status, pch = 19)
+
+H3K4_data_lda2 <- lda(H3K4$status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_2014_chip + Snail_2009_chip + Twist_2011_seq + Twist_2014_chip + Twist_2009_chip + Bicoid_2013_seq + Bicoid_2009_chip + Caudal_2010_seq + Caudal_2009_chip + Hunchback_2013_seq + Hunchback_2009_chip + Giant_2013_seq + Giant_2009_chip + Kruppel_2013_seq + Knirps_2010_seq + Hairy_2009_chip + H3K27ac_2015_seq + H3K27ac_2010_seq + H3K4me1_2015_seq + p300_2010_seq + Zld_motif_sanger + Zld_motif_solexa + Dorsal_motif_FlyReg + Dorsal_motif_NBT + Snail_motif_FlyReg + Snail_motif_Sanger + Snail_motif_solexa + Twist_motif_FlyReg + Twist_motif_da + Dsim + Dsec + Dyak + Dere + Dana + Dpse + Dwil + Dvir + Dgri, data = H3K4,prior = rep(1, 2)/2)
+
+
+smp_size <- floor(0.66 * nrow(all_data))
+
+## set the seed to make your partition reproductible
+set.seed(123)
+train_ind <- sample(seq_len(nrow(all_data)), size = smp_size)
+
+train <- all_data[train_ind, ]
+test <- all_data[-train_ind, ]
+
+H3K4_data_lda <- lda(H3K4$status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_2014_chip + Snail_2009_chip + Twist_2011_seq + Twist_2014_chip + Twist_2009_chip + Bicoid_2013_seq + Bicoid_2009_chip + Caudal_2010_seq + Caudal_2009_chip + Hunchback_2013_seq + Hunchback_2009_chip + Giant_2013_seq + Giant_2009_chip + Kruppel_2013_seq + Knirps_2010_seq + Hairy_2009_chip + H3K27ac_2015_seq + H3K27ac_2010_seq + H3K4me1_2015_seq + p300_2010_seq + Zld_motif_sanger + Zld_motif_solexa + Dorsal_motif_FlyReg + Dorsal_motif_NBT + Snail_motif_FlyReg + Snail_motif_Sanger + Snail_motif_solexa + Twist_motif_FlyReg + Twist_motif_da + Dsim + Dsec + Dyak + Dere + Dana + Dpse + Dwil + Dvir + Dgri, data = H3K4,prior = rep(1, 2)/2, CV=TRUE)
+H3K4.data.lda.values <- predict(H3K4_data_lda, test)
+conCV1 <- rbind(tab[1, ]/sum(tab[1, ]), tab[2, ]/sum(tab[2, ]))
+dimnames(conCV1) <- list(Actual = c("No", "Yes"), "Predicted (cv)" = c("No",
++     "Yes"))
+> print(round(conCV1, 3))
+ Pima.lda <- lda(type ~ ., data = Pima.tr)
+> Pima.hat <- predict(Pima.lda)
+> tabtrain <- table(Pima.tr$type, Pima.hat$class)
+
+Rev_1 <- predict(H3K4_data_lda, all_data)
+Rev1.class <- Rev_1$class
+plot(Rev_1$x[,1], ylab=c("LDA Axis 1"), col = all_data$status, pch = 19)
+
+plot(H3K4$Zelda_2011_seq, H3K4$Hunchback_2009_chip,
+     xlab="Zelda", ylab="Hunchback", 
+     main="Cross-Validated LD Classification", 
+     pch=as.numeric(H3K4$status)+ 19,
+     col=as.numeric(H3K4_data_lda$class)) 
+	
+all_data_lda <- lda(all_data$status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_2014_chip + Snail_2009_chip + Twist_2011_seq + Twist_2014_chip + Twist_2009_chip + Bicoid_2013_seq + Bicoid_2009_chip + Caudal_2010_seq + Caudal_2009_chip + Hunchback_2013_seq + Hunchback_2009_chip + Giant_2013_seq + Giant_2009_chip + Kruppel_2013_seq + Knirps_2010_seq + Hairy_2009_chip + H3K27ac_2015_seq + H3K27ac_2010_seq + H3K4me1_2015_seq + p300_2010_seq + Zld_motif_sanger + Zld_motif_solexa + Dorsal_motif_FlyReg + Dorsal_motif_NBT + Snail_motif_FlyReg + Snail_motif_Sanger + Snail_motif_solexa + Twist_motif_FlyReg + Twist_motif_da + Dsim + Dsec + Dyak + Dere + Dana + Dpse + Dwil + Dvir + Dgri, data = all_data,prior = rep(1, 2)/2, CV=TRUE)
+
+plot(all_data$Zelda_2011_seq, all_data$H3K4me1_2015_seq,
+     xlab="Zelda", ylab="H3K4me1", 
+     main="Cross-Validated LD Classification", 
+     pch=as.numeric(all_data$status) + 19,
+     col=as.numeric(all_data_lda$class)) 
+
+Rev_2 <- predict(all_data_lda, H3K4)
+Rev2.class <- Rev_2$class
+plot(Rev_2$x[,1], ylab=c("LDA Axis 1"), col = H3K4$status, pch = 19)
+
+all_data_lda <- lda(all_data$status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_2014_chip + Snail_2009_chip + Twist_2011_seq + Twist_2014_chip + Twist_2009_chip + Bicoid_2013_seq + Bicoid_2009_chip + Caudal_2010_seq + Caudal_2009_chip + Hunchback_2013_seq + Hunchback_2009_chip + Giant_2013_seq + Giant_2009_chip + Kruppel_2013_seq + Knirps_2010_seq + Hairy_2009_chip + H3K27ac_2015_seq + H3K27ac_2010_seq + H3K4me1_2015_seq + p300_2010_seq + Zld_motif_sanger + Zld_motif_solexa + Dorsal_motif_FlyReg + Dorsal_motif_NBT + Snail_motif_FlyReg + Snail_motif_Sanger + Snail_motif_solexa + Twist_motif_FlyReg + Twist_motif_da + Dsim + Dsec + Dyak + Dere + Dana + Dpse + Dwil + Dvir + Dgri, data = all_data,prior = rep(1, 2)/2, CV=TRUE)
+all_data_lda2 <- lda(all_data$status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_2014_chip + Snail_2009_chip + Twist_2011_seq + Twist_2014_chip + Twist_2009_chip + Bicoid_2013_seq + Bicoid_2009_chip + Caudal_2010_seq + Caudal_2009_chip + Hunchback_2013_seq + Hunchback_2009_chip + Giant_2013_seq + Giant_2009_chip + Kruppel_2013_seq + Knirps_2010_seq + Hairy_2009_chip + H3K27ac_2015_seq + H3K27ac_2010_seq + H3K4me1_2015_seq + p300_2010_seq + Zld_motif_sanger + Zld_motif_solexa + Dorsal_motif_FlyReg + Dorsal_motif_NBT + Snail_motif_FlyReg + Snail_motif_Sanger + Snail_motif_solexa + Twist_motif_FlyReg + Twist_motif_da + Dsim + Dsec + Dyak + Dere + Dana + Dpse + Dwil + Dvir + Dgri, data = all_data,prior = rep(1, 2)/2)
+
+plot(all_data$Zelda_2011_seq, all_data$H3K4me1_2015_seq,
+     xlab="Zelda", ylab="H3K4me1", 
+     main="Cross-Validated LD Classification", 
+     pch=as.numeric(all_data_lda2$status),
+     col=as.numeric(all_data_lda$class)) 

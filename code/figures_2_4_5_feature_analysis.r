@@ -79,11 +79,72 @@ tmp <- a_c
 tmp[upper.tri(tmp)] <- NA
 heatmap.2(tmp,  trace = "none", margins =c(7.5,7.5), dendrogram = "none", density.info = "none", Rowv = FALSE, Colv = FALSE, col = my_palette, scale = "none", keysize = 1.2)
 
+
+#average overlap within and between features-
+#mean between same transcription factor, different lab = 51.6
+#results for transcription factors from the same lab are averaged
+mean_overlap_within <- c(a_o[2,3], mean(c(a_o[4,5],a_o[4,6],a_o[4,7],a_o[5,6],a_o[5,7])),mean(c(a_o[8,9],a_o[8,10])), mean(c(a_o[11,12],a_o[11,13])),a_o[14,15], mean(c(a_o[16,17],a_o[16,18])), a_o[19,20], a_o[23,24])
+mean(mean_overlap_within)
+
+#for each transcription factor, how much it overlaps with each *other* transcription factor = 48.5
+#results for each transcription factor are averaged
+#results for multiple antibodies within the MacArthur dataset are averaged
+mean_overlap_between_high <- c(mean(c(h_o[1,2:24])), mean(c(mean(c(h_o[2,c(1,4:24)])), mean(c(h_o[3,c(1,4:24)])))), mean(c(mean(c(h_o[4,c(1:3,8:24)])), mean(c(h_o[5,c(1:3,8:24)]))), mean(c(mean(c(h_o[6,c(1:3,8:24)])), mean(c(h_o[7,c(1:3,8:24)]))))), mean(c(mean(c(h_o[8,c(1:7,11:24)])), mean(c(mean(c(h_o[9,c(1:7,11:24)])), mean(c(h_o[10,c(1:7,11:24)])))))),
+mean(c(mean(c(h_o[11,c(1:10,14:24)])), mean(c(mean(c(h_o[12,c(1:10,14:24)])), mean(c(h_o[13,c(1:10,14:24)])))))), mean(c(mean(c(h_o[14,c(1:13,16:24)])), mean(c(h_o[15,c(1:13,16:24)])))),
+mean(c(mean(c(h_o[16,c(1:15,19:24)])), mean(c(mean(c(h_o[17,c(1:15,19:24)])), mean(c(h_o[18,c(1:15,19:24)])))))),mean(c(mean(c(h_o[19,c(1:18,21:24)])), mean(c(h_o[20,c(1:18,21:24)])))),
+mean(c(h_o[21,c(1:20,22:24)])),mean(c(h_o[22,c(1:21,23:24)])),mean(c(mean(c(h_o[23,c(1:22)])), mean(c(h_o[24,c(1:22)])))))
+mean(mean_overlap_between_high)
+
+#average overlap within and between features-high scoring!
+#mean between same transcription factor, different lab = 57.1
+#results for transcription factors from the same lab are averaged
+mean_overlap_within <- c(h_o[2,3], mean(c(h_o[4,5],h_o[4,6],h_o[4,7],h_o[5,6],h_o[5,7])),mean(c(h_o[8,9],h_o[8,10])), mean(c(h_o[11,12],h_o[11,13])),h_o[14,15], mean(c(h_o[16,17],h_o[16,18])), h_o[19,20], h_o[23,24])
+mean(mean_overlap_within_high)
+
+#for each transcription factor, how much it overlaps with each *other* transcription factor- high scoring! = 37.8
+#results for each transcription factor are averaged
+#results for multiple antibodies within the MacArthur dataset are averaged
+mean_overlap_between_high <- c(mean(c(h_o[1,2:24])), mean(c(mean(c(h_o[2,c(1,4:24)])), mean(c(h_o[3,c(1,4:24)])))), mean(c(mean(c(h_o[4,c(1:3,8:24)])), mean(c(h_o[5,c(1:3,8:24)]))), mean(c(mean(c(h_o[6,c(1:3,8:24)])), mean(c(h_o[7,c(1:3,8:24)]))))), mean(c(mean(c(h_o[8,c(1:7,11:24)])), mean(c(mean(c(h_o[9,c(1:7,11:24)])), mean(c(h_o[10,c(1:7,11:24)])))))),
+mean(c(mean(c(h_o[11,c(1:10,14:24)])), mean(c(mean(c(h_o[12,c(1:10,14:24)])), mean(c(h_o[13,c(1:10,14:24)])))))), mean(c(mean(c(h_o[14,c(1:13,16:24)])), mean(c(h_o[15,c(1:13,16:24)])))),
+mean(c(mean(c(h_o[16,c(1:15,19:24)])), mean(c(mean(c(h_o[17,c(1:15,19:24)])), mean(c(h_o[18,c(1:15,19:24)])))))),mean(c(mean(c(h_o[19,c(1:18,21:24)])), mean(c(h_o[20,c(1:18,21:24)])))),
+mean(c(h_o[21,c(1:20,22:24)])),mean(c(h_o[22,c(1:21,23:24)])),mean(c(mean(c(h_o[23,c(1:22)])), mean(c(h_o[24,c(1:22)])))))
+mean(mean_overlap_between_high)
+
+
+#average corr within and between features-
+#mean between same transcription factor, different lab = 0.485
+#results for transcription factors from the same lab are averaged
+mean_corr_within <- c(a_c[2,3], mean(c(a_c[4,5],a_c[4,6],a_c[4,7],a_c[5,6],a_c[5,7])),mean(c(a_c[8,9],a_c[8,10])), mean(c(a_c[11,12],a_c[11,13])),a_c[14,15], mean(c(a_c[16,17],a_c[16,18])), a_c[19,20], a_c[23,24])
+mean(mean_corr_within)
+
+#for each transcription factor, how much it corrs with each *other* transcription factor = 0.202
+#results for each transcription factor are averaged
+#results for multiple antibodies within the MacArthur dataset are averaged
+mean_corr_between <- c(mean(c(a_c[1,2:24])), mean(c(mean(c(a_c[2,c(1,4:24)])), mean(c(a_c[3,c(1,4:24)])))), mean(c(mean(c(a_c[4,c(1:3,8:24)])), mean(c(a_c[5,c(1:3,8:24)]))), mean(c(mean(c(a_c[6,c(1:3,8:24)])), mean(c(a_c[7,c(1:3,8:24)]))))), mean(c(mean(c(a_c[8,c(1:7,11:24)])), mean(c(mean(c(a_c[9,c(1:7,11:24)])), mean(c(a_c[10,c(1:7,11:24)])))))),
+mean(c(mean(c(a_c[11,c(1:10,14:24)])), mean(c(mean(c(a_c[12,c(1:10,14:24)])), mean(c(a_c[13,c(1:10,14:24)])))))), mean(c(mean(c(a_c[14,c(1:13,16:24)])), mean(c(a_c[15,c(1:13,16:24)])))),
+mean(c(mean(c(a_c[16,c(1:15,19:24)])), mean(c(mean(c(a_c[17,c(1:15,19:24)])), mean(c(a_c[18,c(1:15,19:24)])))))),mean(c(mean(c(a_c[19,c(1:18,21:24)])), mean(c(a_c[20,c(1:18,21:24)])))),
+mean(c(a_c[21,c(1:20,22:24)])),mean(c(a_c[22,c(1:21,23:24)])),mean(c(mean(c(a_c[23,c(1:22)])), mean(c(a_c[24,c(1:22)])))))
+mean(mean_corr_between)
+
+#average corr within_high and between_high features-high scoring!
+#mean between_high same transcription factor, different lab = 0.4568797
+#results for transcription factors from the same lab are averaged
+mean_corr_within_high <- c(h_c[2,3], mean(c(h_c[4,5],h_c[4,6],h_c[4,7],h_c[5,6],h_c[5,7])),mean(c(h_c[8,9],h_c[8,10])), mean(c(h_c[11,12],h_c[11,13])),h_c[14,15], mean(c(h_c[16,17],h_c[16,18])), h_c[19,20], h_c[23,24])
+mean(mean_corr_within_high)
+
+#for each transcription factor, how much it corrs with each *other* transcription factor- high scoring! = 0.06658448
+#results for each transcription factor are averaged
+#results for multiple antibodies within_high the MacArthur dataset are averaged
+mean_corr_between_high <- c(mean(c(h_c[1,2:24])), mean(c(mean(c(h_c[2,c(1,4:24)])), mean(c(h_c[3,c(1,4:24)])))), mean(c(mean(c(h_c[4,c(1:3,8:24)])), mean(c(h_c[5,c(1:3,8:24)]))), mean(c(mean(c(h_c[6,c(1:3,8:24)])), mean(c(h_c[7,c(1:3,8:24)]))))), mean(c(mean(c(h_c[8,c(1:7,11:24)])), mean(c(mean(c(h_c[9,c(1:7,11:24)])), mean(c(h_c[10,c(1:7,11:24)])))))),
+mean(c(mean(c(h_c[11,c(1:10,14:24)])), mean(c(mean(c(h_c[12,c(1:10,14:24)])), mean(c(h_c[13,c(1:10,14:24)])))))), mean(c(mean(c(h_c[14,c(1:13,16:24)])), mean(c(h_c[15,c(1:13,16:24)])))),
+mean(c(mean(c(h_c[16,c(1:15,19:24)])), mean(c(mean(c(h_c[17,c(1:15,19:24)])), mean(c(h_c[18,c(1:15,19:24)])))))),mean(c(mean(c(h_c[19,c(1:18,21:24)])), mean(c(h_c[20,c(1:18,21:24)])))),
+mean(c(h_c[21,c(1:20,22:24)])),mean(c(h_c[22,c(1:21,23:24)])),mean(c(mean(c(h_c[23,c(1:22)])), mean(c(h_c[24,c(1:22)])))))
+mean(mean_corr_between_high)
+
 #figure 5
 #plots of feature correlations with reporters
 #plots of how features associate with bound regions
 #plots including unbound regions
-#to do-- make supplementary figure that includes all features
 #Dorsal 2015 seq
 dev.off()
 temp_data <- subset(all_data, all_data$Dorsal_2015_seq > (min(all_data$Dorsal_2015_seq)))
