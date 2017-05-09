@@ -439,6 +439,9 @@ my_features <- all_features
 all_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allDataReduced", description = "allDataReduced", "allDataReduced", 10, 100, strata_Percent_var, "ROC", current_target, "All_Data_Reduced", 43, "NA", "NA")
 all_recall_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allDataReduced", description = "allDataReduced", "allDataReduced", 10, 250, strata_Percent_var, "recall",current_target, "All_Data_Reduced",43, "NA", "NA")
 
+all_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allDataReduced", description = "allDataReduced", "allDataReduced", 10, 250, strata_balance, "ROC", current_all, "All_Data_Reduced", 43, "NA", "NA")
+all_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allDataReduced", description = "allDataReduced", "allDataReduced", 10, 250, strata_balance, "recall", current_target, "All_Data_Reduced", 43, "NA", "NA")
+
 all_means <- apply(all_ROC_data[[1]], MARGIN = 2, FUN = mean)
 all_sd <- apply(all_ROC_data[[1]], MARGIN=2, FUN=sd)
 
