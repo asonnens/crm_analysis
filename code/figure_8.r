@@ -268,14 +268,14 @@ Leave_one_out <- function(mydataset, mydatabalance){
 	random_balance <-cbind(mydatabalance[,1], name_column, random_balance)
 	colnames(random_data) <- long_name
 	colnames(random_balance) <- long_name
-	l <- vector(mode="numeric", length=126) #unbalanced, dropping most important
-	l2 <- vector(mode="character", length=42)  #most important to least important features
-	l3 <- vector(mode="numeric", length=126)#unbalanced, dropping least important
-	l4 <- vector(mode="character", length=42) #least important to most important features
-	l5 <- vector(mode="numeric", length=126) #balanced, dropping most important
-	l6 <- vector(mode="character", length=42)  #most important to least important features
-	l7 <- vector(mode="numeric", length=126)#balanced, dropping least important
-	l8 <- vector(mode="character", length=42) #least important to most important features
+	l <- vector(mode="numeric", length=123) #unbalanced, dropping most important
+	l2 <- vector(mode="character", length=41)  #most important to least important features
+	l3 <- vector(mode="numeric", length=123)#unbalanced, dropping least important
+	l4 <- vector(mode="character", length=41) #least important to most important features
+	l5 <- vector(mode="numeric", length=123) #balanced, dropping most important
+	l6 <- vector(mode="character", length=41)  #most important to least important features
+	l7 <- vector(mode="numeric", length=123)#balanced, dropping least important
+	l8 <- vector(mode="character", length=41) #least important to most important features
 	DlTwi_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "Dl_Twi ", description = "Dl_Twi ", "Dl_Twi", 10, 250, strata_Percent_var, "ROC", current_target, "Dl_Twi_Test",43, "NA", "NA")
     DlTwi_means <- apply(DlTwi_ROC_data[[1]], MARGIN = 2, FUN = mean)
     DlTwi_sd <- apply(DlTwi_ROC_data[[1]], MARGIN=2, FUN=sd)
@@ -477,11 +477,11 @@ Leave_one_out <- function(mydataset, mydatabalance){
 }
 
 myframe <- Leave_one_out(Bcd13_train_all, Bcd13_train_cons)
-xnames <- c(1,1,1,3,3,3,5,5,5,7,7,7,9,9,9,11,11,11,13,13,13,15,15,15,17,17,17,19,19,19,21,21,21,23,23,23,25,25,25,27,27,27,29,29,29,31,31,31,33,33,33,35,35,35,37,37,37,39,39,39,41,41,41,43,43,43,45,45,45,47,47,47,49,49,49,51,51,51,53,53,53,55,55,55,57,57,57,59,59,59,61,61,61,63,63,63,65,65,65, 67,67,67,69,69,69,71,71,71,73,73,73,75,75,75,77,77,77,79,79,79,81,81,81,83,83,83)
-plot(xnames, myframe[[1]], xaxt = "none", col = "black", pch = "+", ylim = c(0.05, 3.0),yaxt = "none", xlab = "", main = "Leave one out- Bcd_13_s")
-points(xnames, myframe[[3]], col = "black", pch = "-")
-points(xnames, myframe[[5]], col = "cadetblue4", pch = "+")
-points(xnames, myframe[[7]], col = "cadetblue4", pch = "-")
+xnames <- c(1,1,1,3,3,3,5,5,5,7,7,7,9,9,9,11,11,11,13,13,13,15,15,15,17,17,17,19,19,19,21,21,21,23,23,23,25,25,25,27,27,27,29,29,29,31,31,31,33,33,33,35,35,35,37,37,37,39,39,39,41,41,41,43,43,43,45,45,45,47,47,47,49,49,49,51,51,51,53,53,53,55,55,55,57,57,57,59,59,59,61,61,61,63,63,63,65,65,65, 67,67,67,69,69,69,71,71,71,73,73,73,75,75,75,77,77,77,79,79,79,81,81,81)
+plot(xnames, myframe[[1]][c(1:120,124:126)], xaxt = "none", col = "black", pch = "+", ylim = c(0.05, 3.0),yaxt = "none", xlab = "", main = "Leave one out- Bcd_13_s")
+points(xnames, myframe[[3]][c(1:120,124:126)], col = "black", pch = "-")
+points(xnames, myframe[[5]][c(1:120,124:126)], col = "cadetblue4", pch = "+")
+points(xnames, myframe[[7]][c(1:120,124:126)], col = "cadetblue4", pch = "-")
 abline(h=1,col=1,lty=1)
 abline(h=2,col=1,lty=1)
 abline(h=0.5,col="gray",lty=2)
@@ -533,11 +533,11 @@ abline(v=82,col="darkgray",lty=3)
 abline(v=84,col="darkgray",lty=3)
 
 myframe2 <- Leave_one_out(all_data, all_data_balance)
-xnames <- c(1,1,1,3,3,3,5,5,5,7,7,7,9,9,9,11,11,11,13,13,13,15,15,15,17,17,17,19,19,19,21,21,21,23,23,23,25,25,25,27,27,27,29,29,29,31,31,31,33,33,33,35,35,35,37,37,37,39,39,39,41,41,41,43,43,43,45,45,45,47,47,47,49,49,49,51,51,51,53,53,53,55,55,55,57,57,57,59,59,59,61,61,61,63,63,63,65,65,65, 67,67,67,69,69,69,71,71,71,73,73,73,75,75,75,77,77,77,79,79,79,81,81,81,83,83,83)
-plot(xnames, myframe2[[1]], xaxt = "none", col = "black", pch = "-", ylim = c(0.5, 3.0),yaxt = "none", xlab = "", main = "Leave one out- all data")
-points(xnames, myframe2[[3]], col = "black", pch = "+")
-points(xnames, myframe2[[5]], col = "cadetblue4", pch = "+")
-points(xnames, myframe2[[7]], col = "cadetblue4", pch = "-")
+xnames <- c(1,1,1,3,3,3,5,5,5,7,7,7,9,9,9,11,11,11,13,13,13,15,15,15,17,17,17,19,19,19,21,21,21,23,23,23,25,25,25,27,27,27,29,29,29,31,31,31,33,33,33,35,35,35,37,37,37,39,39,39,41,41,41,43,43,43,45,45,45,47,47,47,49,49,49,51,51,51,53,53,53,55,55,55,57,57,57,59,59,59,61,61,61,63,63,63,65,65,65, 67,67,67,69,69,69,71,71,71,73,73,73,75,75,75,77,77,77,79,79,79,81,81,81)
+plot(xnames, myframe2[[1]][c(1:120,124:126)], xaxt = "none", col = "black", pch = "-", ylim = c(0.5, 3.0),yaxt = "none", xlab = "", main = "Leave one out- all data")
+points(xnames, myframe2[[3]][c(1:120,124:126)], col = "black", pch = "+")
+points(xnames, myframe2[[5]][c(1:120,124:126)], col = "cadetblue4", pch = "+")
+points(xnames, myframe2[[7]][c(1:120,124:126)], col = "cadetblue4", pch = "-")
 abline(h=1,col=1,lty=1)
 abline(h=2,col=1,lty=1)
 abline(h=0.5,col="gray",lty=2)

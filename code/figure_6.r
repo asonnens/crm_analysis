@@ -282,7 +282,7 @@ current_tab <- table(all_data$status)
 current_target <- read.table("target_file.tsv", header = TRUE)
 prosp_target <- read.table("prospective_file.tsv", header = TRUE)
 newdata <- current_target
-all_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData", description = "allData", "allData", 1, 250, strata_Percent_var, "ROC", current_target, "All_Data_Test",43, "NA", "NA")
+all_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData", description = "allData", "allData", 10, 250, strata_Percent_var, "ROC", current_target, "All_Data_Test",43, "NA", "NA")
 all_PRROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_prosp", description = "allData_prosp", "allData_prosp", 10, 250, strata_Percent_var, "recall", prosp_target, "All_Data_Test_prosp",43, "NA", "NA")
 all_means <- apply(all_ROC_data[[1]], MARGIN = 2, FUN = mean)
 all_sd <- apply(all_ROC_data[[1]], MARGIN=2, FUN=sd)
