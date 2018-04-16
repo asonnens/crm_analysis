@@ -1,5 +1,9 @@
 #functions for reading and parsing the data from Kvon 2014
 #because it uses enhancer_classes requires scipy and numpy
+#This treats a list of enhancer coordinates (taken from the
+#Fly Enhancer Resources) as prospective enhancers. For each 
+#enhancer, all overlapping TF binding, etc., are assigned to it
+#as features using the enhancer_classes functions.
 
 import enhancer_classes
 
@@ -12,7 +16,6 @@ sometimes = "/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_
         
 #this function reads the file, and converts each line into a list
 #with expression information as a sublist
-
 def read_Stark(filename, dataset_name):
     reporter_list = []
     myfile = open(filename)
@@ -68,10 +71,10 @@ def read_Annotated(filename, dataset_name):
     myfile.close()
     return(reporter_list)
 
-#my_reporters = read_Stark(input, "Kvon2014")
+
 my_reporters = read_Stark(sometimes, "Kvon2014")
-#my_reporters = read_Stark(expression_input, "Kvon2014")
-#my_reporters = read_Annotated(Annotated_input, "Annotated")
+my_reporters = read_Stark(expression_input, "Kvon2014")
+my_reporters = read_Annotated(Annotated_input, "Annotated")
 
 
 #this function takes the list output from the function "read_Stark"
@@ -141,7 +144,7 @@ def print_Stark(my_reporters):
 
 all_lists = print_Stark(my_reporters)
                     
-#(self, gene, coords, distance, expr, status)
+
 one_list = all_lists[0]
 multi_list = all_lists[1]
 all_expression_list = all_lists[2]
@@ -149,30 +152,9 @@ NA_list = all_lists[3]
 expression_list = all_lists[4]
 
 
-stark_all_comparison = enhancer_classes.Enhancer_compare(expression_list, "Usually_test1")
-#enhancer_classes.Enhancer_compare.print_enhancer_data(stark_all_comparison)
-#stark_one_reporter_comparison = enhancer_classes.Enhancer_compare(one_list, "Stark")
-#stark_NA_reporter_comparison = enhancer_classes.Enhancer_compare(NA_list, "Stark_NA_1_13_2016")
-#stark_all_reporter_comparison = enhancer_classes.Enhancer_compare(all_expression_list, "Stark_Active_1_13_2016")
-#enhancer_classes.Enhancer_compare.print_enhancer_data(stark_one_reporter_comparison)
-#enhancer_classes.Enhancer_compare.print_enhancer_data(stark_NA_reporter_comparison)
-#enhancer_classes.Enhancer_compare.print_enhancer_data(stark_all_reporter_comparison)
+stark_all_comparison = enhancer_classes.Enhancer_compare(expression_list, "Test1")
+
 enhancer_classes.Enhancer_compare.print_enhancer_data(stark_all_comparison)
 
-#my_reporters = read_Stark(Always_never, "Kvon2014")
-
-#all_lists = print_Stark(my_reporters)
-
-                    
-#(self, gene, coords, distance, expr, status)
-#one_list = all_lists[0]
-#multi_list = all_lists[1]
-#all_expression_list = all_lists[2]
-#NA_list = all_lists[3]
-#expression_list = all_lists[4]
-
-
-#stark_all_comparison = enhancer_classes.Enhancer_compare(expression_list, "Always_test1")
-
-
-#enhancer_classes.Enhancer_compare.print_enhancer_data(stark_all_comparison)
+my_reporters = read_Stark(Always_never, "Kvon2014")
+all_lists = print_Stark(my_reporters)

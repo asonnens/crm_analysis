@@ -200,14 +200,14 @@ resample_rf500 <- function(function_name, dataset, datatable, variable_name, out
 enhancer_class_status_scale <- function(dataset, datatable, filename = "temp", summaryfile = "temp_summary", samplesize, stratafun, count, graph, mydataframe, validated_data, info, featurenum, format, model){
     enhancers_set <- stratafun(dataset, "status", datatable,2, featurenum, featurenum - 3, samplesize)   
 	enhancers_training2 <- enhancers_set[[1]]
-	#enhancers_training_vars <- enhancers_training2[,3:featurenum]
-	#enhancers_data_trainingscale <- scale(enhancers_training_vars)
-    #enhancers_trainingscale <- cbind(enhancers_training2[,1:2],enhancers_data_trainingscale)
-	enhancers_training <- enhancers_training2
+	enhancers_training_vars <- enhancers_training2[,3:featurenum]
+	enhancers_data_trainingscale <- scale(enhancers_training_vars)
+    enhancers_trainingscale <- cbind(enhancers_training2[,1:2],enhancers_data_trainingscale)
+	enhancers_training <- enhancers_trainingscale
 	enhancers_test2 <- enhancers_set[[2]]
-	#enhancers_data_testscale <- scale(enhancers_test2[,3:featurenum])
-    #enhancers_testscale <- cbind(enhancers_test2[,1:2],enhancers_data_testscale)
-	enhancers_test <- enhancers_test2 
+	enhancers_data_testscale <- scale(enhancers_test2[,3:featurenum])
+    enhancers_testscale <- cbind(enhancers_test2[,1:2],enhancers_data_testscale)
+	enhancers_test <- enhancers_testscale
 	actual <- enhancers_test$status
 	pred.validated <- validated_data
 	if (format == "PCA"){pred.validated <- predict(model, validated_data)}
@@ -274,10 +274,16 @@ levels(stage_group$status)[levels(stage_group$status)=="always"]<-"now"
 levels(stage_group$status)[levels(stage_group$status)=="4_8"]<-"now"
 levels(stage_group$status)[levels(stage_group$status)=="9_12"]<-"later"
 levels(stage_group$status)[levels(stage_group$status)=="13_16"]<-"later"
+stage_compare <- droplevels()
 stage.pca <- prcomp(stage_group[,3:43],center = TRUE,scale. = TRUE) 
 autoplot(stage.pca, choices = c(1,2), data = stage_group,colour = "status")
-tempplot("PC1", "PC2",stage.pca, choices = c(1,2), data = stage_group,colour = "status", alpha = 1, frame = TRUE, frame.type = "norm") + scale_color_manual(values = c("darkred","cadetblue"))
+tempplot("PC1", "PC2",stage.pca, choices = c(1,2), data = stage_group,colour = "status", alpha = 1, frame = TRUE, frame.type = "norm") + scale_color_manual(values = c("darkred","cadetblue", "black"))
+g <- lda(status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_2014_chip + Snail_2009_chip + Twist_2011_seq + Twist_2014_chip + Twist_2009_chip + Bicoid_2013_seq + Bicoid_2009_chip + Caudal_2010_seq + Caudal_2009_chip + Hunchback_2013_seq + Hunchback_2009_chip + Giant_2013_seq + Giant_2009_chip + Kruppel_2013_seq + Knirps_2010_seq + Hairy_2009_chip + H3K27ac_2015_seq + H3K27ac_2010_seq + H3K4me1_2015_seq + p300_2010_seq + Zld_motif_sanger + Zld_motif_solexa + Dorsal_motif_FlyReg + Dorsal_motif_NBT + Snail_motif_FlyReg + Snail_motif_Sanger + Snail_motif_solexa + Twist_motif_FlyReg + Twist_motif_da + Dsim + Dsec + Dyak + Dere + Dana + Dpse + Dwil + Dvir + Dgri, data = stage_group,prior = rep(1, 2)/3)
+hab.lda.values <- predict(g, status)
+hab.class <- predict(g)$class
+plot(hab.lda.values$x[,1], ylab=c("LDA Axis 1"), col = stage_group$status, pch = 19)
 
+ldahist(data = hab.lda.values$x[,1], g=stage_group$status,col = "cadetblue4")
 #Active now vs Always active
 active_active <- subset(stage_compare,  status != "never")
 active_active <- subset(active_active,  status != "semi-specific")
@@ -286,6 +292,22 @@ active_active <- subset(active_active,  status != "9_12")
 active_active$status <- factor(active_active$status)
 active.pca <- prcomp(active_active[,3:43],center = TRUE,scale. = TRUE) 
 tempplot("PC1", "PC2",active.pca, choices = c(1,2), data = active_active,colour = "status", alpha = 1, frame = TRUE, frame.type = "norm") 
+
+g <- lda(status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_2014_chip + Snail_2009_chip + Twist_2011_seq + Twist_2014_chip + Twist_2009_chip + Bicoid_2013_seq + Bicoid_2009_chip + Caudal_2010_seq + Caudal_2009_chip + Hunchback_2013_seq + Hunchback_2009_chip + Giant_2013_seq + Giant_2009_chip + Kruppel_2013_seq + Knirps_2010_seq + Hairy_2009_chip + H3K27ac_2015_seq + H3K27ac_2010_seq + H3K4me1_2015_seq + p300_2010_seq + Zld_motif_sanger + Zld_motif_solexa + Dorsal_motif_FlyReg + Dorsal_motif_NBT + Snail_motif_FlyReg + Snail_motif_Sanger + Snail_motif_solexa + Twist_motif_FlyReg + Twist_motif_da + Dsim + Dsec + Dyak + Dere + Dana + Dpse + Dwil + Dvir + Dgri, data = active_active,prior = rep(1, 2)/2)
+hab.lda.values <- predict(g, active_active)
+hab.class <- predict(g)$class
+plot(hab.lda.values$x[,1], ylab=c("LDA Axis 1"), col = active_active$status, pch = 19)
+
+ldahist(data = hab.lda.values$x[,1], g=active_active$status,col = "cadetblue4")
+#Always vs Never
+always_never <- subset(stage_compare,  status != "4_8")
+always_never <- subset(always_never,  status != "semi-specific")
+always_never <- subset(always_never,  status != "13_16")
+always_never <- subset(always_never,  status != "9_12")
+always_never$status <- factor(always_never$status)
+active.pca <- prcomp(always_never[,3:43],center = TRUE,scale. = TRUE) 
+tempplot("PC1", "PC2",active.pca, choices = c(1,2), data = always_never,colour = "status", alpha = 1, frame = TRUE, frame.type = "norm") 
+
 
 
 #Always vs Never
@@ -376,6 +398,8 @@ plot(hab.lda.values$x[,1], ylab=c("LDA Axis 1"), col = current_all$status, pch =
 ldahist(data = hab.lda.values$x[,1], g=current_all$status)
 
 g_cv <- lda(current_all$status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_2014_chip + Snail_2009_chip + Twist_2011_seq + Twist_2014_chip + Twist_2009_chip + Bicoid_2013_seq + Bicoid_2009_chip + Caudal_2010_seq + Caudal_2009_chip + Hunchback_2013_seq + Hunchback_2009_chip + Giant_2013_seq + Giant_2009_chip + Kruppel_2013_seq + Knirps_2010_seq + Hairy_2009_chip + H3K27ac_2015_seq + H3K27ac_2010_seq + H3K4me1_2015_seq + p300_2010_seq + Zld_motif_sanger + Zld_motif_solexa + Dorsal_motif_FlyReg + Dorsal_motif_NBT + Snail_motif_FlyReg + Snail_motif_Sanger + Snail_motif_solexa + Twist_motif_FlyReg + Twist_motif_da + Dsim + Dsec + Dyak + Dere + Dana + Dpse + Dwil + Dvir + Dgri, data = current_all,prior = rep(1, 2)/2, CV=TRUE)
+ggplot(g_cv, aes(x[,1] fill = status)) + geom_density(alpha = 0.5)+ theme(axis.ticks = element_blank(), axis.text.y = element_blank(), axis.text.x = element_blank())
+ggplot(all_data, aes(Dsim, fill = status)) + geom_density(alpha = 0.5)+ theme(axis.ticks = element_blank(), axis.text.y = element_blank(), axis.text.x = element_blank())
 
 plot(current_all$Zelda_2011_seq, current_all$H3K4me1_2015_seq,
      xlab="Zelda", ylab="H3K4me1", 
@@ -462,3 +486,49 @@ all_data <- all_data[c("enhancer","status","Zelda_2011_seq","Dorsal_2015_seq","D
 stage_compare <- read.table("stage_compare.tsv",header = TRUE)
 stage_compare <- stage_compare[c("enhancer","status","Zelda_2011_seq","Dorsal_2015_seq","Dorsal_2009_chip","Snail_2014_chip","Snail_2009_chip","Twist_2011_seq","Twist_2014_chip","Twist_2009_chip","Bicoid_2013_seq","Bicoid_2009_chip","Caudal_2010_seq","Caudal_2009_chip","Hunchback_2013_seq","Hunchback_2009_chip","Giant_2013_seq","Giant_2009_chip","Kruppel_2013_seq","Knirps_2010_seq","Hairy_2009_chip","H3K27ac_2015_seq","H3K27ac_2010_seq","H3K4me1_2015_seq","p300_2010_seq", "Zld_motif_sanger", "Zld_motif_solexa", "Dorsal_motif_FlyReg","Dorsal_motif_NBT","Snail_motif_FlyReg","Snail_motif_Sanger","Snail_motif_solexa","Twist_motif_FlyReg","Twist_motif_da","Dsim","Dsec","Dyak","Dere","Dana","Dpse","Dwil","Dvir","Dgri")]
 
+g <- lda(status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_2014_chip + Snail_2009_chip + Twist_2011_seq + Twist_2014_chip + Twist_2009_chip + Bicoid_2013_seq + Bicoid_2009_chip + Caudal_2010_seq + Caudal_2009_chip + Hunchback_2013_seq + Hunchback_2009_chip + Giant_2013_seq + Giant_2009_chip + Kruppel_2013_seq + Knirps_2010_seq + Hairy_2009_chip + H3K27ac_2015_seq + H3K27ac_2010_seq + H3K4me1_2015_seq + p300_2010_seq + Zld_motif_sanger + Zld_motif_solexa + Dorsal_motif_FlyReg + Dorsal_motif_NBT + Snail_motif_FlyReg + Snail_motif_Sanger + Snail_motif_solexa + Twist_motif_FlyReg + Twist_motif_da + Dsim + Dsec + Dyak + Dere + Dana + Dpse + Dwil + Dvir + Dgri, data = stage_compare,prior = rep(1, 2)/2)
+hab.lda.values <- predict(g, status)
+hab.class <- predict(g)$class
+plot(hab.lda.values$x[,1], ylab=c("LDA Axis 1"), col = stage_compare$status, pch = 19)
+
+ldahist(data = hab.lda.values$x[,1], g=stage_compare$status,col = "cadetblue4")
+
+stage_group <- stage_compare
+stage_group <- subset(stage_group,  status != "always")
+stage_group <- subset(stage_group,  status != "semi-specific")
+stage_group <- subset(stage_group,  status != "never")
+levels(stage_group$status)[levels(stage_group$status)=="9_12"]<-"later"
+levels(stage_group$status)[levels(stage_group$status)=="13_16"]<-"later"
+stage_group$status <- factor(stage_group$status)
+#levels(stage_group$status)[levels(stage_group$status)=="4_8"]<-"now"
+#levels(stage_group$status)[levels(stage_group$status)=="9_12"]<-"later"
+#levels(stage_group$status)[levels(stage_group$status)=="13_16"]<-"later"
+
+
+
+stage.pca <- prcomp(stage_group[,3:43],center = TRUE,scale. = TRUE) 
+autoplot(stage.pca, choices = c(1,2), data = stage_group,colour = "status")
+tempplot("PC1", "PC2",stage.pca, choices = c(1,2), data = stage_group,colour = "status", alpha = 1, frame = TRUE, frame.type = "norm") + scale_color_manual(values = c("coral", "cadetblue4"))
+
+g <- lda(status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_2014_chip + Snail_2009_chip + Twist_2011_seq + Twist_2014_chip + Twist_2009_chip + Bicoid_2013_seq + Bicoid_2009_chip + Caudal_2010_seq + Caudal_2009_chip + Hunchback_2013_seq + Hunchback_2009_chip + Giant_2013_seq + Giant_2009_chip + Kruppel_2013_seq + Knirps_2010_seq + Hairy_2009_chip + H3K27ac_2015_seq + H3K27ac_2010_seq + H3K4me1_2015_seq + p300_2010_seq + Zld_motif_sanger + Zld_motif_solexa + Dorsal_motif_FlyReg + Dorsal_motif_NBT + Snail_motif_FlyReg + Snail_motif_Sanger + Snail_motif_solexa + Twist_motif_FlyReg + Twist_motif_da + Dsim + Dsec + Dyak + Dere + Dana + Dpse + Dwil + Dvir + Dgri, data = stage_group,prior = rep(1, 2)/2, CV = FALSE)
+hab.lda.values <- predict(g, stage_group)
+hab.class <- predict(g)$class
+plot(hab.lda.values$x[,1], ylab=c("LDA Axis 1"), col = stage_group$status, pch = 19)
+
+ab.lda <- lda(grp ~ ., data=hab_std)
+
+hab.lda.values <- predict(hab.lda, hab_std)
+hab.class <- predict(hab.lda)$class
+
+#create a histogram of the discriminant function values
+ldahist(data = hab.lda.values$x[,1], g=grp)
+
+
+ldahist(data = hab.lda.values$x[,1], g=stage_group$status,col = "cadetblue4")
+
+g <- lda(status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_2014_chip + Snail_2009_chip + Twist_2011_seq + Twist_2014_chip + Twist_2009_chip + Bicoid_2013_seq + Bicoid_2009_chip + Caudal_2010_seq + Caudal_2009_chip + Hunchback_2013_seq + Hunchback_2009_chip + Giant_2013_seq + Giant_2009_chip + Kruppel_2013_seq + Knirps_2010_seq + Hairy_2009_chip + H3K27ac_2015_seq + H3K27ac_2010_seq + H3K4me1_2015_seq + p300_2010_seq + Zld_motif_sanger + Zld_motif_solexa + Dorsal_motif_FlyReg + Dorsal_motif_NBT + Snail_motif_FlyReg + Snail_motif_Sanger + Snail_motif_solexa + Twist_motif_FlyReg + Twist_motif_da + Dsim + Dsec + Dyak + Dere + Dana + Dpse + Dwil + Dvir + Dgri, data = stage_group,prior = rep(1, 2)/2, CV=TRUE)
+hab.lda.values <- predict(g, status)
+hab.class <- predict(g)$class
+plot(hab.lda.values$x[,1], ylab=c("LDA Axis 1"), col = stage_group$status, pch = 19)
+
+ldahist(data = hab.lda.values$x[,1], g=stage_group$status,col = "cadetblue4")

@@ -234,8 +234,8 @@ enhancer_class_status_scale <- function(dataset, datatable, filename = "temp", s
 	return_list <- list(rf_500_prediction_success, rf_500_actual_on, rf_500_true_off, rf_500_false_on, rf_500_false_off, AUC, prec_reca, mydataframe)
 	return(return_list)             
 }      
-current_target <- read.table("target_file.tsv", header = TRUE)
-prosp_target <- read.table("prospective_file.tsv", header = TRUE)
+current_target <- read.table("target_file2.tsv", header = TRUE)
+prosp_target <- read.table("prospective_file2.tsv", header = TRUE)
 newdata <- current_target
 
 

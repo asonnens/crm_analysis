@@ -258,7 +258,6 @@ tempplot <- function (a, b, object, data = NULL, scale = 1, ...)
    
 ACP <- ACP[c("enhancer","status","Zelda_2011_seq","Dorsal_2015_seq","Dorsal_2009_chip","Snail_2014_chip","Snail_2009_chip","Twist_2011_seq","Twist_2014_chip","Twist_2009_chip","Bicoid_2013_seq","Bicoid_2009_chip","Caudal_2010_seq","Caudal_2009_chip","Hunchback_2013_seq","Hunchback_2009_chip","Giant_2013_seq","Giant_2009_chip","Kruppel_2013_seq","Knirps_2010_seq","Hairy_2009_chip","H3K27ac_2015_seq","H3K27ac_2010_seq","H3K4me1_2015_seq","p300_2010_seq", "Zld_motif_sanger", "Zld_motif_solexa", "Dorsal_motif_FlyReg","Dorsal_motif_NBT","Snail_motif_FlyReg","Snail_motif_Sanger","Snail_motif_solexa","Twist_motif_FlyReg","Twist_motif_da","Dsim","Dsec","Dyak","Dere","Dana","Dpse","Dwil","Dvir","Dgri")] 
 current_all <- ACP
-ACP <- ACP[c("enhancer","status","Zelda_2011_seq","Dorsal_2015_seq","Dorsal_2009_chip","Snail_2014_chip","Snail_2009_chip","Twist_2011_seq","Twist_2014_chip","Twist_2009_chip","Bicoid_2013_seq","Bicoid_2009_chip","Caudal_2010_seq","Caudal_2009_chip","Hunchback_2013_seq","Hunchback_2009_chip","Giant_2013_seq","Giant_2009_chip","Kruppel_2013_seq","Knirps_2010_seq","Hairy_2009_chip","H3K27ac_2015_seq","H3K27ac_2010_seq","H3K4me1_2015_seq","p300_2010_seq", "Zld_motif_sanger", "Zld_motif_solexa", "Dorsal_motif_FlyReg","Dorsal_motif_NBT","Snail_motif_FlyReg","Snail_motif_Sanger","Snail_motif_solexa","Twist_motif_FlyReg","Twist_motif_da","Dsim","Dsec","Dyak","Dere","Dana","Dpse","Dwil","Dvir","Dgri")]
 current_all <- current_all[c("enhancer","status","Zelda_2011_seq","Dorsal_2015_seq","Dorsal_2009_chip","Snail_2014_chip","Snail_2009_chip","Twist_2011_seq","Twist_2014_chip","Twist_2009_chip","Bicoid_2013_seq","Bicoid_2009_chip","Caudal_2010_seq","Caudal_2009_chip","Hunchback_2013_seq","Hunchback_2009_chip","Giant_2013_seq","Giant_2009_chip","Kruppel_2013_seq","Knirps_2010_seq","Hairy_2009_chip","H3K27ac_2015_seq","H3K27ac_2010_seq","H3K4me1_2015_seq","p300_2010_seq", "Zld_motif_sanger", "Zld_motif_solexa", "Dorsal_motif_FlyReg","Dorsal_motif_NBT","Snail_motif_FlyReg","Snail_motif_Sanger","H3K27ac_2015_seq","Twist_motif_FlyReg","Twist_motif_da","Dsim","Dsec","Dyak","Dere","Dana","Dpse","Dwil","Dvir","Dgri")]
 current_tab <- table(current_all$status)
 current_target <-  current_target[c("enhancer","status","Zelda_2011_seq","Dorsal_2015_seq","Dorsal_2009_chip","Snail_2014_chip","Snail_2009_chip","Twist_2011_seq","Twist_2014_chip","Twist_2009_chip","Bicoid_2013_seq","Bicoid_2009_chip","Caudal_2010_seq","Caudal_2009_chip","Hunchback_2013_seq","Hunchback_2009_chip","Giant_2013_seq","Giant_2009_chip","Kruppel_2013_seq","Knirps_2010_seq","Hairy_2009_chip","H3K27ac_2015_seq","H3K27ac_2010_seq","H3K4me1_2015_seq","p300_2010_seq", "Zld_motif_sanger", "Zld_motif_solexa", "Dorsal_motif_FlyReg","Dorsal_motif_NBT","Snail_motif_FlyReg","Snail_motif_Sanger","Snail_motif_solexa","Twist_motif_FlyReg","Twist_motif_da","Dsim","Dsec","Dyak","Dere","Dana","Dpse","Dwil","Dvir","Dgri")]
@@ -289,6 +288,55 @@ alldata <- all_temp[order(all_mean),]
 dotchart(alldata[,1], xlab = "Importance-ACP", xlim = c(-5,30), cex = 0.7, pch = 19)
 segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 
+#All data, ACP-- DROP CAD
+all_features <- c(3:43)
+current_all <- ACP
+current_tab <- table(current_all$status)
+my_features <- all_features
+
+
+current_all_drop <- current_all
+current_all_drop$Caudal_2009_chip <- NULL
+current_all_drop$Caudal_2010_seq <- NULL
+current_all <- current_all_drop
+current_tab <- table(current_all$status)
+all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_balance, "ROC", current_target, "allData_balance_Test",39, "NA", "NA")
+
+dropcad_means <- apply(all_bal_ROC_data[[1]], MARGIN = 2, FUN = mean)
+dropcad_sd <- apply(all_bal_ROC_data[[1]], MARGIN=2, FUN=sd)
+
+#All data, ACP-- DROP BICOID
+all_features <- c(3:43)
+current_all <- ACP
+current_tab <- table(current_all$status)
+my_features <- all_features
+
+
+current_all_drop <- current_all
+current_all_drop$Bicoid_2013_seq <- NULL
+current_all_drop$Bicoid_2009_chip <- NULL
+current_all <- current_all_drop
+current_tab <- table(current_all$status)
+all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_balance, "ROC", current_target, "allData_balance_Test",39, "NA", "NA")
+
+dropbcd_means <- apply(all_bal_ROC_data[[1]], MARGIN = 2, FUN = mean)
+dropbcd_sd <- apply(all_bal_ROC_data[[1]], MARGIN=2, FUN=sd)
+
+#All data, ACP-- DROP BICOID AND CAUDAL
+
+
+current_all_drop <- current_all
+current_all_drop$Caudal_2009_chip <- NULL
+current_all_drop$Caudal_2010_seq <- NULL
+current_all <- current_all_drop
+current_tab <- table(current_all$status)
+all_bal_ROC_data <- resample_rf500(enhancer_class_status_scale, current_all, current_tab, "allData_balance", description = "allData_balance", "allData_balance", 10, 250, strata_balance, "ROC", current_target, "allData_balance_Test",37, "NA", "NA")
+
+dropbcdcad_means <- apply(all_bal_ROC_data[[1]], MARGIN = 2, FUN = mean)
+dropbcdcad_sd <- apply(all_bal_ROC_data[[1]], MARGIN=2, FUN=sd)
+
+
+
 #All data Reduced, ACP
 current_all <- ACP
 current_tab <- table(current_all$status)
@@ -297,7 +345,7 @@ current_target <-  current_target[c("enhancer","status","Zelda_2011_seq","Dorsal
 my_features <- all_features
 
 df2 = cor(current_all[,3:43])
-hc = findCorrelation(df2, cutoff=0.7) # put any value as a "cutoff" 
+hc = findCorrelation(df2, cutoff=0.7) 
 hc = sort(hc)
 reduced_Data = current_all[,-c(hc)]
 #search here
@@ -424,9 +472,13 @@ dotchart(alldata[,1], xlab = "Importance", xlim = c(-5,30), cex = 0.7, pch = 19)
 segments(alldata[,1]-alldata[,2], 1:43, alldata[,1]+alldata[,2], 1:43)
 
 
-ACP_means <- cbind(all_means, Reduced_means, Reduced_means_more, PCA25_means, PCA10_means, random_means)
-ACP_sd <- cbind(all_sd, Reduced_sd, Reduced_sd_more, PCA25_sd, PCA10_sd, random_sd)
-colnames(ACP_means) <- c("All data", "Reduced_1", "Reduced_2", "25 PC", "10 PC", "Random")
+#ACP_means <- cbind(all_means, Reduced_means, Reduced_means_more, PCA25_means, PCA10_means,dropbcd_means, dropbcdcad_means, random_means)
+#ACP_sd <- cbind(all_sd, Reduced_sd, Reduced_sd_more, PCA25_sd, PCA10_sd, dropbcd_sd, dropbcdcad_sd, random_sd)
+#colnames(ACP_means) <- c("All data", "Reduced_1", "Reduced_2", "25 PC", "10 PC", "bcd", " cad", "Random")
+
+ACP_means <- cbind(all_means, PCA25_means,dropbcdcad_means, random_means)
+ACP_sd <- cbind(all_sd,PCA25_sd, dropbcdcad_sd, random_sd)
+colnames(ACP_means) <- c("All data", "25 PC", "bcd_cad", "Random")
 
 
 ACP_plot <- barplot(ACP_means[6:7,], beside = TRUE, col = c("darkgoldenrod", "darkgreen"), ylim = c(0,1), cex.lab = 1.5, cex.axis = 1.5, cex.names = 1)
@@ -535,7 +587,8 @@ g <- lda(status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_20
 hab.lda.values <- predict(g, ACP)
 hab.class <- predict(g)$class
 plot(hab.lda.values$x[,1], ylab=c("LDA Axis 1"), col = ACP$status, pch = 19)
-ldahist(data = hab.lda.values$x[,1], g=ACP$status)
+
+ldahist(data = hab.lda.values$x[,1], g=ACP$status,col = "cadetblue4")
 
 g_CV <- lda(ACP$status ~ Zelda_2011_seq + Dorsal_2015_seq + Dorsal_2009_chip + Snail_2014_chip + Snail_2009_chip + Twist_2011_seq + Twist_2014_chip + Twist_2009_chip + Bicoid_2013_seq + Bicoid_2009_chip + Caudal_2010_seq + Caudal_2009_chip + Hunchback_2013_seq + Hunchback_2009_chip + Giant_2013_seq + Giant_2009_chip + Kruppel_2013_seq + Knirps_2010_seq + Hairy_2009_chip + H3K27ac_2015_seq + H3K27ac_2010_seq + H3K4me1_2015_seq + p300_2010_seq + Zld_motif_sanger + Zld_motif_solexa + Dorsal_motif_FlyReg + Dorsal_motif_NBT + Snail_motif_FlyReg + Snail_motif_Sanger + Snail_motif_solexa + Twist_motif_FlyReg + Twist_motif_da + Dsim + Dsec + Dyak + Dere + Dana + Dpse + Dwil + Dvir + Dgri, data = ACP,prior = rep(1, 2)/2, CV=TRUE)
 

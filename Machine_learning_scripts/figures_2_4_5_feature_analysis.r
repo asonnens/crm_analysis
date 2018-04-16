@@ -85,6 +85,8 @@ heatmap.2(tmp,  trace = "none", margins =c(7.5,7.5), dendrogram = "none", densit
 #results for transcription factors from the same lab are averaged
 mean_overlap_within <- c(a_o[2,3], mean(c(a_o[4,5],a_o[4,6],a_o[4,7],a_o[5,6],a_o[5,7])),mean(c(a_o[8,9],a_o[8,10])), mean(c(a_o[11,12],a_o[11,13])),a_o[14,15], mean(c(a_o[16,17],a_o[16,18])), a_o[19,20], a_o[23,24])
 mean(mean_overlap_within)
+max(mean_overlap_within)
+min(mean_overlap_within)
 
 #for each transcription factor, how much it overlaps with each *other* transcription factor = 48.5
 #results for each transcription factor are averaged
@@ -98,17 +100,17 @@ mean(mean_overlap_between_high)
 #average overlap within and between features-high scoring!
 #mean between same transcription factor, different lab = 57.1
 #results for transcription factors from the same lab are averaged
-mean_overlap_within <- c(h_o[2,3], mean(c(h_o[4,5],h_o[4,6],h_o[4,7],h_o[5,6],h_o[5,7])),mean(c(h_o[8,9],h_o[8,10])), mean(c(h_o[11,12],h_o[11,13])),h_o[14,15], mean(c(h_o[16,17],h_o[16,18])), h_o[19,20], h_o[23,24])
+mean_overlap_within_high <- c(h_o[2,3], mean(c(h_o[4,5],h_o[4,6],h_o[4,7],h_o[5,6],h_o[5,7])),mean(c(h_o[8,9],h_o[8,10])), mean(c(h_o[11,12],h_o[11,13])),h_o[14,15], mean(c(h_o[16,17],h_o[16,18])), h_o[19,20], h_o[23,24])
 mean(mean_overlap_within_high)
 
-#for each transcription factor, how much it overlaps with each *other* transcription factor- high scoring! = 37.8
+#for each transcription factor, how much it overlaps with each *other* transcription factor-all scores = 41%
 #results for each transcription factor are averaged
 #results for multiple antibodies within the MacArthur dataset are averaged
-mean_overlap_between_high <- c(mean(c(h_o[1,2:24])), mean(c(mean(c(h_o[2,c(1,4:24)])), mean(c(h_o[3,c(1,4:24)])))), mean(c(mean(c(h_o[4,c(1:3,8:24)])), mean(c(h_o[5,c(1:3,8:24)]))), mean(c(mean(c(h_o[6,c(1:3,8:24)])), mean(c(h_o[7,c(1:3,8:24)]))))), mean(c(mean(c(h_o[8,c(1:7,11:24)])), mean(c(mean(c(h_o[9,c(1:7,11:24)])), mean(c(h_o[10,c(1:7,11:24)])))))),
-mean(c(mean(c(h_o[11,c(1:10,14:24)])), mean(c(mean(c(h_o[12,c(1:10,14:24)])), mean(c(h_o[13,c(1:10,14:24)])))))), mean(c(mean(c(h_o[14,c(1:13,16:24)])), mean(c(h_o[15,c(1:13,16:24)])))),
-mean(c(mean(c(h_o[16,c(1:15,19:24)])), mean(c(mean(c(h_o[17,c(1:15,19:24)])), mean(c(h_o[18,c(1:15,19:24)])))))),mean(c(mean(c(h_o[19,c(1:18,21:24)])), mean(c(h_o[20,c(1:18,21:24)])))),
-mean(c(h_o[21,c(1:20,22:24)])),mean(c(h_o[22,c(1:21,23:24)])),mean(c(mean(c(h_o[23,c(1:22)])), mean(c(h_o[24,c(1:22)])))))
-mean(mean_overlap_between_high)
+mean_overlap_between_all <- c(mean(c(a_o[1,2:24])), mean(c(mean(c(a_o[2,c(1,4:24)])), mean(c(a_o[3,c(1,4:24)])))), mean(c(mean(c(a_o[4,c(1:3,8:24)])), mean(c(a_o[5,c(1:3,8:24)]))), mean(c(mean(c(a_o[6,c(1:3,8:24)])), mean(c(a_o[7,c(1:3,8:24)]))))), mean(c(mean(c(a_o[8,c(1:7,11:24)])), mean(c(mean(c(a_o[9,c(1:7,11:24)])), mean(c(a_o[10,c(1:7,11:24)])))))),
+mean(c(mean(c(a_o[11,c(1:10,14:24)])), mean(c(mean(c(a_o[12,c(1:10,14:24)])), mean(c(a_o[13,c(1:10,14:24)])))))), mean(c(mean(c(a_o[14,c(1:13,16:24)])), mean(c(a_o[15,c(1:13,16:24)])))),
+mean(c(mean(c(a_o[16,c(1:15,19:24)])), mean(c(mean(c(a_o[17,c(1:15,19:24)])), mean(c(a_o[18,c(1:15,19:24)])))))),mean(c(mean(c(a_o[19,c(1:18,21:24)])), mean(c(a_o[20,c(1:18,21:24)])))),
+mean(c(a_o[21,c(1:20,22:24)])),mean(c(a_o[22,c(1:21,23:24)])),mean(c(mean(c(a_o[23,c(1:22)])), mean(c(a_o[24,c(1:22)])))))
+mean(mean_overlap_between_all)
 
 
 #average corr within and between features-

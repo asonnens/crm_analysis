@@ -2,7 +2,9 @@
 #Anne Sonnenschein
 #2014
 #this script applies classes to find 'average' characteristics of a fixed group
-#of well defined enhancers. It applies functions from the enhancer classes
+#of well defined enhancers, or prespective enhancers that were identified using
+#clustering of different features, within the enhancer_classes.py script.
+#It applies functions from the enhancer classes
 #to identify putative enhancers around genes that are involved in a developmental
 #pathway, and genes that are not involved, and act as negative control
 ###############################################################################
@@ -116,40 +118,34 @@ def genes_to_check(infilename, outfilename, windowradius, seed):
     enhancer_classes.Enhancer_compare.print_enhancer_data(output_output)
 
       
-#known_enhancer_comparison = known_enhancers("/mnt/home/sonnens2/crm_analysis/input_data/input_files/known_enhancers.csv")
-#enhancer_classes.Enhancer_compare.print_enhancer_data(known_enhancer_comparison)
-#crap = known_enhancers("/mnt/home/sonnens2/crm_analysis/update/input_data/input_files/my_crap_list.csv")
-#enhancer_classes.Enhancer_compare.print_enhancer_data(crap)
-#finding potential enhancers for genes that are definitely involved in the developmental pathway
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/input_data/input_files/negative_enhancers.csv")
-#finding potential enhancers for genes that ARE involved in the developmental pathway
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Furlong_snail_target_500", 250, "snail")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Furlong_snail_prospective_500", 250, "snail")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Furlong_twist_target_500", 250, "twist")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Furlong_twist_prospective_500", 250, "twist")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Furlong_snail_target_1000", 500, "sna")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Furlong_snail_prospective_1000", 500, "sna")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Furlong_twist_target_1000", 500, "twist")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Furlong_twist_prospective_1000", 500, "twist")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Rushlow_Dorsal_target_500", 250, "DorsalR")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Rushlow_Dorsal_prospective_500", 250, "DorsalR")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Dorsal2009_target_500", 250, "dl")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Dorsal2009_prospective_500", 250, "dl")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "TESTRushlow_Dorsal_target_1000", 500, "DorsalR")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Rushlow_Dorsal_prospective_1000", 500, "DorsalR")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "TESTDorsal2009_target_1000", 500, "dl")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "TEST_Dorsal2009_prospective_1000", 500, "dl")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Zelda_target_1000", 500, "Zelda180")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Zelda_prospective_1000", 500, "Zelda180")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Zelda_target_500", 250, "Zelda180")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Zelda_prospective_500", 250, "Zelda180")
 
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "TESTRushlow_Dorsal_target_500", 250, "DorsalR")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "TESTRushlow_Dorsal_prospective_500", 250, "DorsalR")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "TESTDorsal2009_target_500", 250, "dl")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "TEST_Dorsal2009_prospective_500", 500, "dl")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "TEST_Furlong_twist_target_500", 250, "twist")
-#genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "TEST_Furlong_twist_prospective_500", 250, "twist")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Furlong_snail_target_500", 250, "snail")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Furlong_snail_prospective_500", 250, "snail")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Furlong_twist_target_500", 250, "twist")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Furlong_twist_prospective_500", 250, "twist")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Furlong_snail_target_1000", 500, "sna")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Furlong_snail_prospective_1000", 500, "sna")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Furlong_twist_target_1000", 500, "twist")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Furlong_twist_prospective_1000", 500, "twist")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Rushlow_Dorsal_target_500", 250, "DorsalR")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Rushlow_Dorsal_prospective_500", 250, "DorsalR")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Dorsal2009_target_500", 250, "dl")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Dorsal2009_prospective_500", 250, "dl")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "TESTRushlow_Dorsal_target_1000", 500, "DorsalR")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Rushlow_Dorsal_prospective_1000", 500, "DorsalR")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "TESTDorsal2009_target_1000", 500, "dl")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "TEST_Dorsal2009_prospective_1000", 500, "dl")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Zelda_target_1000", 500, "Zelda180")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Zelda_prospective_1000", 500, "Zelda180")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "Zelda_target_500", 250, "Zelda180")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "Zelda_prospective_500", 250, "Zelda180")
+
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "TESTRushlow_Dorsal_target_500", 250, "DorsalR")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "TESTRushlow_Dorsal_prospective_500", 250, "DorsalR")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "TESTDorsal2009_target_500", 250, "dl")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "TEST_Dorsal2009_prospective_500", 500, "dl")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "TEST_Furlong_twist_target_500", 250, "twist")
+genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "TEST_Furlong_twist_prospective_500", 250, "twist")
 genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/target_genes.csv", "TESTZelda_target_500", 250, "Zelda180")
 genes_to_check("/mnt/home/sonnens2/crm_analysis/datasets/enhancer_prediction_input_data/enhancer_prediction_input_files/prosp_genes.csv", "TESTZelda_prospective_500", 250, "Zelda180")
 

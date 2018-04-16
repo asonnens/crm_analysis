@@ -199,8 +199,8 @@ def euclid_dist(keyinfo, newdict, samplenum):
         print "Error: sample size is: ", samplesize
     print len(conservative_list), len(lax_list), len(random_list), len(all_list)
     return(new_list, all_on, conservative_list, lax_list, random_list, all_list)
-
-
+	
+#outputs a histogram of scores
 def make_euc_plot(conservative_list, lax_list, random_list, all_list, dataname):
     cons_nums = np.array([x[-1] for x in conservative_list])
     lax_nums = np.array([x[-1] for x in lax_list])
@@ -217,7 +217,8 @@ def make_euc_plot(conservative_list, lax_list, random_list, all_list, dataname):
     plt.legend()
     savefig("Euclidean_comparison_" + dataname)
     plt.close()
-
+	
+#saves results as a tab seperated text file
 def make_output(on_list, off_list, keywords, filename):
     outfile = open(filename, "w")
     keywords_string = "\t".join(keywords)

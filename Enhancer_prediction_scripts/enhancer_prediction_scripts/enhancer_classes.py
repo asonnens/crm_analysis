@@ -190,9 +190,7 @@ class Enhancer(object):
 
     def read_axt(self, infile, filename):
         #########################################################
-        #
-        #
-        #
+        #A function for reading axt alignment format
         #########################################################
         if self.chr not in filename:
             infile.close()
@@ -639,7 +637,7 @@ class Enhancer_find:
 
     def merge_enhancers(self, enhancer_list):
         #########################################################
-        #
+        #Combines features for enhancers with overlappign coordinates
         #########################################################
         midpoint_list = []
         distance_from_TSS = 0
@@ -697,7 +695,10 @@ class Enhancer_find:
 
     def find_TF(self, choose_protein = "dl"):
         #########################################################
-        #
+        #If no enhancer coordinates are provided, this takes a 
+		#'seed' TF (defaulting to Dorsal) and makes a list of all
+		#places it binds, to compare with others for positions of
+		#overlap
         #########################################################
         putative_enhancer_list = []
         print "finding TFs"
@@ -733,7 +734,7 @@ class Enhancer_find:
 
     def score_enhancers(self, enhancer_list):
         #########################################################
-        #
+        #Extracts information from each file type, for each enhancer
         #########################################################
         list_name = self.gene  + "_" + self.status + "_enhancers"
         print "getting info for ", list_name
@@ -742,9 +743,6 @@ class Enhancer_find:
                 i.read_file(bedgraph)
             for axt in axt_files:
                 i.read_file(axt)
-            #for wigfile in phast_files:
-            #    i.read_file(wigfile)
             for wigfile in histone_files:
                 i.read_file(wigfile)
         my_compare = Enhancer_compare(enhancer_list, list_name)
-#        Enhancer_compare.print_enhancer_data(my_compare)
